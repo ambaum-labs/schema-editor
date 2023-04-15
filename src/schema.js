@@ -20,7 +20,7 @@ function stringifyObjects(objects, indent, level) {
   }).join(',\n');
 }
 
-function generateSchema({ name, tag, sectionClass, limit, settings, blocks, presets }) {
+function generateSchema({ name, tag, sectionClass, limit, maxBlocks, settings, blocks, presets }) {
   let indent = 2;
   let level = 1;
   let schema = '{% schema %}\n{\n';
@@ -34,6 +34,9 @@ function generateSchema({ name, tag, sectionClass, limit, settings, blocks, pres
   }
   if (limit) {
     schema += indentString(`"limit": ${limit},\n`, indent, level);
+  }
+  if (maxBlocks) {
+    schema += indentString(`"max_blocks": ${maxBlocks},\n`, indent, level);
   }
   schema += indentString(`"settings": [\n`, indent, level);
   level++;

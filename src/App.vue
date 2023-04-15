@@ -17,10 +17,13 @@ export default {
 
   data() {
     return {
-      name: '',
-      tag: '',
-      sectionClass: '',
-      limit: '',
+      general: {
+        name: '',
+        tag: '',
+        sectionClass: '',
+        limit: null,
+        maxBlocks: null,
+      },
       settings: [{test:123}],
       blocks: [],
       presets: [],
@@ -30,10 +33,7 @@ export default {
   computed: {
     schema() {
       return generateSchema({
-        name: this.name,
-        tag: this.tag,
-        sectionClass: this.sectionClass,
-        limit: this.limit,
+        ...this.general,
         settings: this.settings,
         blocks: this.blocks,
         presets: this.presets,
@@ -45,8 +45,12 @@ export default {
     loadFromSchema(newSchema) {
       const jsonString = newSchema.replace(/\{%[^%]+%\}/g, '').trim();
       try {
-        const { name, settings, blocks, presets } = JSON.parse(jsonString);
-        this.name = name || this.name;
+        const { name, tag, class: sectionClass, limit, max_blocks: maxBlocks, settings, blocks, presets } = JSON.parse(jsonString);
+        this.general.name = name || this.general.name;
+        this.general.tag = tag || this.general.tag;
+        this.general.sectionClass = sectionClass || this.general.sectionClass;
+        this.general.limit = limit || this.general.limit;
+        this.general.maxBlocks = maxBlocks || this.general.maxBlocks;
         this.settings = settings || this.settings;
         this.blocks = blocks || this.blocks;
         this.presets = presets || this.presets;
@@ -76,13 +80,16 @@ export default {
 
   <main class="flex flex-1 py-5 pl-5">
     <SchemaEditor class="basis-1/3 mr-5"
-      :name="name"
+      v-bind="general"
       :settings="settings"
-      @rename="(newName) => name = newName"
-      @tag="(newTag) => tag = newTag"
-      @setClass="(newClass) => sectionClass = newClass"
-      @setLimit="(newLimit) => limit = newLimit"
-      @update="(newSettings) => settings = newSettings"
+      @setGeneral="(key, value) => general[key] = value"
+      @setSetting="(index, setting) => {
+        if (index) {
+          settings[index] = setting;
+        } else {
+          settings.push(setting)
+        }
+      }"
     />
     <BlocksEditor class="basis-1/3 mr-5" />
     <SchemaCode

@@ -14,7 +14,20 @@ export default {
     Card,
   },
 
-  emits: ['rename', 'tag', 'setClass', 'setLimit', 'updateSettings'],
+  emits: ['setGeneral', 'setSettings'],
+
+  data() {
+    return {
+      validTags: [
+        'article',
+        'aside',
+        'div',
+        'footer',
+        'header',
+        'section',
+      ],
+    };
+  },
 };
 </script>
 
@@ -29,7 +42,7 @@ export default {
         id="name"
         class="flex-1 bg-slate-700 py-1.5 px-3"
         :value="name"
-        @input="(e) => $emit('rename', e.currentTarget.value)"
+        @input="(e) => $emit('setGeneral', 'name', e.currentTarget.value.trim())"
       >
     </div>
     <div class="flex items-center mb-3">
@@ -37,12 +50,15 @@ export default {
         for="tag"
         class="w-[60px] mr-3"
       >Tag:</label>
-      <input
+      <select
         id="tag"
         class="flex-1 bg-slate-700 py-1.5 px-3"
         :value="tag"
-        @input="(e) => $emit('tag', e.currentTarget.value)"
+        @input="(e) => $emit('setGeneral', 'tag', e.currentTarget.value.trim())"
       >
+        <option></option>
+        <option v-for="tag in validTags">{{ tag }}</option>
+      </select>
     </div>
     <div class="flex items-center mb-3">
       <label
@@ -53,7 +69,7 @@ export default {
         id="class"
         class="flex-1 bg-slate-700 py-1.5 px-3"
         :value="sectionClass"
-        @input="(e) => $emit('setClass', e.currentTarget.value)"
+        @input="(e) => $emit('setGeneral', 'sectionClass', e.currentTarget.value.trim())"
       >
     </div>
     <div class="flex items-center mb-3">
@@ -65,8 +81,9 @@ export default {
         id="limit"
         type="number"
         class="flex-1 bg-slate-700 py-1.5 px-3"
+        min="0"
         :value="limit"
-        @input="(e) => $emit('setLimit', e.currentTarget.value)"
+        @input="(e) => $emit('setGeneral', 'limit', e.currentTarget.value >= 0 ? Number(e.currentTarget.value) : 0)"
       >
     </div>
     <h1 class="text-lg font-semibold mb-3">Settings</h1>
