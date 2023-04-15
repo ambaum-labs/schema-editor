@@ -123,7 +123,7 @@ export default {
         <Settings
           :settings="settings"
           @update="(index, setting) => $emit('setSetting', index, setting)"
-          @add="$emit('setSetting', settings.length, { ...defaultSetting, guid: guid() })"
+          @add="$emit('setSetting', settings.length, { ...defaultSetting, guid: guid(), expanded: true })"
         />
       </div>
       <div v-show="activeTab === 'locales'">

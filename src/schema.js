@@ -1,3 +1,5 @@
+const hiddenFields = ['guid', 'expanded'];
+
 function indentString(str, indent, level) {
   return Array(indent * level).join(' ') + str;
 }
@@ -8,7 +10,7 @@ function stringifyObjects(objects, indent, level) {
     level++;
     const entries = Object.entries(obj);
     entries.forEach(([key, value], index) => {
-      if (key === 'guid') {
+      if (hiddenFields.includes(key)) {
         return true;
       }
       objectString += indentString(`"${key}": ${JSON.stringify(value)}`, indent, level);

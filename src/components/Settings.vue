@@ -1,5 +1,5 @@
 <script>
-const hiddenFields = ['guid'];
+const hiddenFields = ['guid', 'expanded'];
 
 export default {
   props: {
@@ -9,10 +9,6 @@ export default {
   computed: {
     displayName() {
       return (setting) => setting.id || setting.label || 'New Setting';
-    },
-
-    isExpanded() {
-      return (index) => this.expanded.includes(index);
     },
 
     settingFields() {
@@ -31,27 +27,7 @@ export default {
     },
   },
 
-  data() {
-    return {
-      expanded: [],
-    };
-  },
-
   methods: {
-    toggleSetting(index) {
-      const start = this.expanded.indexOf(index);
-      if (start !== -1) {
-        this.expanded.splice(index, 1);
-      } else {
-        this.expanded.push(index);
-      }
-    },
-
-    addSetting() {
-      this.expanded.push(this.settings.length);
-      this.$emit('add');
-    },
-
     changeSetting(index, key, value) {
       this.$emit('update', index, { ...this.settings[index], [key]: value });
     },
@@ -73,12 +49,12 @@ export default {
     >
       <button
         class="p-2 bg-slate-800 text-left"
-        @click="toggleSetting(index)"
+        @click="setting.expanded = !setting.expanded"
       >
         {{ displayName(setting) }}
       </button>
       <div
-        v-show="isExpanded(index)"
+        v-show="setting.expanded"
         class="flex flex-col pt-3"
       >
         <div
@@ -112,7 +88,7 @@ export default {
 
     <button
       class="mt-5 rounded-md px-5 py-1 bg-yellow-400 text-slate-900 font-semibold uppercase text-sm"
-      @click="addSetting"
+      @click="$emit('add')"
     >Add Setting</button>
   </div>
 </template>
