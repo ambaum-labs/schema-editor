@@ -67,7 +67,7 @@ export default {
         </div>
         <h1 class="mt-1 ml-5 text-3xl font-semibold">Schema Editor</h1>
       </div>
-      <a href="https://ambaum.com" target="_blank" class="text-center">
+      <a href="https://ambaum.com" target="_blank" class="text-xs text-center">
         Powered by
         <AmbaumLogo class="justify-self-end" height="25" width="190" />
       </a>
