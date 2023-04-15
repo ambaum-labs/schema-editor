@@ -8,6 +8,9 @@ function stringifyObjects(objects, indent, level) {
     level++;
     const entries = Object.entries(obj);
     entries.forEach(([key, value], index) => {
+      if (key === 'guid') {
+        return true;
+      }
       objectString += indentString(`"${key}": ${JSON.stringify(value)}`, indent, level);
       if (index < entries.length - 1) {
         objectString += ',';

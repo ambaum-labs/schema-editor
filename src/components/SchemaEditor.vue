@@ -1,6 +1,7 @@
 <script>
 import Card from './Card.vue';
 import Tabs from './Tabs.vue';
+import Settings from './Settings.vue';
 
 export default {
   props: {
@@ -14,9 +15,10 @@ export default {
   components: {
     Card,
     Tabs,
+    Settings,
   },
 
-  emits: ['setGeneral', 'setSettings'],
+  emits: ['setGeneral', 'addSetting', 'setSetting'],
 
   data() {
     return {
@@ -34,7 +36,22 @@ export default {
         'header',
         'section',
       ],
+      defaultSetting: {
+        id: '',
+        label: '',
+        type: 'text',
+      },
     };
+  },
+
+  methods: {
+    guid() {
+      function _p8(s) {
+        const p = (Math.random().toString(16)+"000000000").substr(2,8);
+        return s ? "-" + p.substr(0,4) + "-" + p.substr(4,4) : p ;
+      }
+      return _p8() + _p8(true) + _p8(true) + _p8();
+    },
   },
 };
 </script>
@@ -103,7 +120,11 @@ export default {
         </div>
       </div>
       <div v-show="activeTab === 'settings'">
-        <h1 class="text-lg font-semibold mb-3">Settings</h1>
+        <Settings
+          :settings="settings"
+          @update="(index, setting) => $emit('setSetting', index, setting)"
+          @add="$emit('setSetting', settings.length, { ...defaultSetting, guid: guid() })"
+        />
       </div>
       <div v-show="activeTab === 'locales'">
         <h1 class="text-lg font-semibold mb-3">Locales</h1>

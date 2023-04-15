@@ -24,7 +24,7 @@ export default {
         limit: null,
         maxBlocks: null,
       },
-      settings: [{test:123}],
+      settings: [],
       blocks: [],
       presets: [],
     };
@@ -84,10 +84,10 @@ export default {
       :settings="settings"
       @setGeneral="(key, value) => general[key] = value"
       @setSetting="(index, setting) => {
-        if (index) {
+        if (index < settings.length) {
           settings[index] = setting;
         } else {
-          settings.push(setting)
+          settings.push(setting);
         }
       }"
     />
