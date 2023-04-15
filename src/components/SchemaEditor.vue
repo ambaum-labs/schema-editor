@@ -27,7 +27,7 @@ export default {
       >Name:</label>
       <input
         id="name"
-        class="flex-1 bg-slate-700 p-3"
+        class="flex-1 bg-slate-700 py-1.5 px-3"
         :value="name"
         @input="(e) => $emit('rename', e.currentTarget.value)"
       >
@@ -39,7 +39,7 @@ export default {
       >Tag:</label>
       <input
         id="tag"
-        class="flex-1 bg-slate-700 p-3"
+        class="flex-1 bg-slate-700 py-1.5 px-3"
         :value="tag"
         @input="(e) => $emit('tag', e.currentTarget.value)"
       >
@@ -51,7 +51,7 @@ export default {
       >Class:</label>
       <input
         id="class"
-        class="flex-1 bg-slate-700 p-3"
+        class="flex-1 bg-slate-700 py-1.5 px-3"
         :value="sectionClass"
         @input="(e) => $emit('setClass', e.currentTarget.value)"
       >
@@ -64,7 +64,7 @@ export default {
       <input
         id="limit"
         type="number"
-        class="flex-1 bg-slate-700 p-3"
+        class="flex-1 bg-slate-700 py-1.5 px-3"
         :value="limit"
         @input="(e) => $emit('setLimit', e.currentTarget.value)"
       >

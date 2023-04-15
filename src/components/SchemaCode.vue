@@ -35,7 +35,7 @@ export default {
       v-model="code"
     />
     <div class="flex items-center justify-between mt-3">
-      <p class="mr-3">To work with an existing schema, paste it and click import</p>
+      <p class="text-sm mr-3">To work with an existing schema, paste it and click import</p>
       <button
         class="rounded-md px-5 py-1 bg-yellow-400 text-slate-900 font-semibold uppercase text-sm"
         @click="$emit('import', code)"
