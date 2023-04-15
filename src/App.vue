@@ -15,6 +15,17 @@ export default {
     SchemaCode,
   },
 
+  computed: {
+    schema() {
+      return generateSchema({
+        ...this.general,
+        settings: this.settings,
+        blocks: this.blocks,
+        presets: this.presets,
+      });
+    },
+  },
+
   data() {
     return {
       general: {
@@ -27,18 +38,21 @@ export default {
       settings: [],
       blocks: [],
       presets: [],
+      savedConfigurations: [],
     };
   },
 
-  computed: {
-    schema() {
-      return generateSchema({
-        ...this.general,
-        settings: this.settings,
-        blocks: this.blocks,
-        presets: this.presets,
-      });
-    },
+  created() {
+    const savedJSON = localStorage.getItem('savedConfigurations');
+    if (!savedJSON) {
+      return;
+    }
+
+    try {
+      this.savedConfigurations = JSON.parse(savedJSON);
+    } catch(err) {
+      console.error('Failed to parse configurations');
+    }
   },
 
   methods: {
@@ -57,6 +71,33 @@ export default {
       } catch(err) {
         console.error('Schema parsing failed');
       }
+    },
+
+    saveConfiguration(name) {
+      this.savedConfigurations.push({
+        name,
+        general: this.general,
+        settings: this.settings,
+        blocks: this.blocks,
+        presets: this.presets,
+        default: this.default,
+      });
+      localStorage.setItem('savedConfigurations', JSON.stringify(this.savedConfigurations));
+    },
+
+    loadConfiguration(selectedName) {
+      const { general, settings, blocks, presets, default: defaultSettings } = this.savedConfigurations.find(({ name }) => name === selectedName);
+      this.general = general;
+      this.settings = settings;
+      this.blocks = blocks;
+      this.presets = presets;
+      this.default = defaultSettings;
+    },
+
+    deleteConfiguration(selectedName) {
+      const index = this.savedConfigurations.findIndex(({ name }) => name === selectedName);
+      this.savedConfigurations.splice(index, 1);
+      localStorage.setItem('savedConfigurations', JSON.stringify(this.savedConfigurations));
     },
   },
 };
@@ -95,7 +136,11 @@ export default {
     <SchemaCode
       class="basis-1/3 mr-5"
       :schema="schema"
+      :savedConfigurations="savedConfigurations"
       @import="loadFromSchema"
+      @saveConfiguration="saveConfiguration"
+      @loadConfiguration="loadConfiguration"
+      @deleteConfiguration="deleteConfiguration"
     />
   </main>
 </template>

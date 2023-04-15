@@ -28,7 +28,7 @@ export default {
       :active="activeTab"
       @change="(tab) => activeTab = tab"
     />
-    <div class="py-4 px-5 flex-1 overflow-y-auto">
+    <div class="pb-4 px-5 flex-1 overflow-y-auto">
       <div v-show="activeTab === 'blocks'">
         <h1 class="text-lg font-semibold mb-3">Blocks</h1>
       </div>
