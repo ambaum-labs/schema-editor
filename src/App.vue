@@ -4,27 +4,7 @@ import ShopifyLogo from './components/icons/ShopifyLogo.vue';
 import SchemaEditor from './components/SchemaEditor.vue';
 import BlocksEditor from './components/BlocksEditor.vue';
 import SchemaCode from './components/SchemaCode.vue';
-
-function indentString(str, indent, level) {
-  return Array(indent * level).join(' ') + str;
-}
-
-function stringifyObjects(objects, indent, level) {
-  return objects.map((obj) => {
-    let objectString = indentString('{\n', indent, level);
-    level++;
-    const entries = Object.entries(obj);
-    entries.forEach(([key, value], index) => {
-      objectString += indentString(`"${key}": ${JSON.stringify(value)}`, indent, level);
-      if (index < entries.length - 1) {
-        objectString += ',';
-      }
-      objectString += '\n';
-    });
-    level--;
-    return objectString;
-  }).join(indentString(',\n', indent, level));
-}
+import generateSchema from './schema';
 
 export default {
   components: {
@@ -38,6 +18,9 @@ export default {
   data() {
     return {
       name: '',
+      tag: '',
+      sectionClass: '',
+      limit: '',
       settings: [{test:123}],
       blocks: [],
       presets: [],
@@ -46,34 +29,15 @@ export default {
 
   computed: {
     schema() {
-      let indent = 2;
-      let level = 1;
-      let schema = '{% schema %}\n{\n';
-      level++;
-      schema += indentString(`"name": "${this.name}",\n`, indent, level);
-      schema += indentString(`"settings": [\n`, indent, level);
-      level++;
-      schema += stringifyObjects(this.settings, indent, level) + '\n';
-      level--;
-      schema += indentString(`]`, indent, level);
-      level--;
-      if (this.blocks.length) {
-        schema += `,\n`;
-        schema += indentString(`"blocks": [\n`, indent, level);
-        level++;
-        schema += stringifyObjects(this.blocks, indent, level) + '\n';
-        schema += indentString(`]`, indent, level);
-      }
-      if (this.presets.length) {
-        schema += `,\n`;
-        schema += indentString(`"presets": [\n`, indent, level);
-        level++;
-        schema += stringifyObjects(this.presets, indent, level) + '\n';
-        schema += indentString(`]`, indent, level);
-      }
-      schema += '\n}\n{% schema %}'
-
-      return schema;
+      return generateSchema({
+        name: this.name,
+        tag: this.tag,
+        sectionClass: this.sectionClass,
+        limit: this.limit,
+        settings: this.settings,
+        blocks: this.blocks,
+        presets: this.presets,
+      });
     },
   },
 
@@ -115,6 +79,9 @@ export default {
       :name="name"
       :settings="settings"
       @rename="(newName) => name = newName"
+      @tag="(newTag) => tag = newTag"
+      @setClass="(newClass) => sectionClass = newClass"
+      @setLimit="(newLimit) => limit = newLimit"
       @update="(newSettings) => settings = newSettings"
     />
     <BlocksEditor class="basis-1/3 mr-5" />

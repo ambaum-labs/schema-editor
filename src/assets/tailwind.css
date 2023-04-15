@@ -570,6 +570,10 @@ video {
   height: 100%;
 }
 
+.w-\[60px\] {
+  width: 60px;
+}
+
 .flex-1 {
   flex: 1 1 0%;
 }
