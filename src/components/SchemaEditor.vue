@@ -36,22 +36,7 @@ export default {
         'header',
         'section',
       ],
-      defaultSetting: {
-        id: '',
-        label: '',
-        type: 'text',
-      },
     };
-  },
-
-  methods: {
-    guid() {
-      function _p8(s) {
-        const p = (Math.random().toString(16)+"000000000").substr(2,8);
-        return s ? "-" + p.substr(0,4) + "-" + p.substr(4,4) : p ;
-      }
-      return _p8() + _p8(true) + _p8(true) + _p8();
-    },
   },
 };
 </script>
@@ -63,7 +48,7 @@ export default {
       :active="activeTab"
       @change="(tab) => activeTab = tab"
     />
-    <div class="py-4 px-5 flex-1 overflow-y-auto">
+    <div class="pb-4 px-5 flex-1 overflow-y-auto">
       <div v-show="activeTab === 'general'">
         <div class="flex items-center mb-3">
           <label
@@ -123,7 +108,6 @@ export default {
         <Settings
           :settings="settings"
           @update="(index, setting) => $emit('setSetting', index, setting)"
-          @add="$emit('setSetting', settings.length, { ...defaultSetting, guid: guid(), expanded: true })"
         />
       </div>
       <div v-show="activeTab === 'locales'">
