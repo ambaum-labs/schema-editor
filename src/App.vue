@@ -78,7 +78,7 @@ export default {
     </div>
   </header>
 
-  <main class="flex flex-1 py-5 pl-5">
+  <main class="flex flex-1 py-5 pl-5 max-h-[calc(100vh-65px)]">
     <SchemaEditor class="basis-1/3 mr-5"
       v-bind="general"
       :settings="settings"
