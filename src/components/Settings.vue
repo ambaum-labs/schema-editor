@@ -73,6 +73,7 @@ export default {
     },
 
     resizeTextarea(textarea) {
+      textarea.style.height = 'auto';
       textarea.style.height = `${textarea.scrollHeight}px`;
     },
 
@@ -107,12 +108,12 @@ export default {
         >
           <label
             :for="`${key}-${setting.guid}`"
-            class="w-[85px] leading-none py-2 mr-3"
+            class="w-[85px] leading-none py-1.5 mr-3"
           >{{ key }}</label>
           <select
             v-if="key === 'type'"
             :id="`${key}-${setting.guid}`"
-            class="flex-1 bg-slate-800 py-2 px-2 leading-none"
+            class="flex-1 bg-slate-700 py-1.5 px-3 leading-snug"
             @change="(e) => changeSetting(index, 'type', e.currentTarget.value)"
           >
             <option v-for="type in inputTypes" :value="type" :selected="type === setting.type">
@@ -122,7 +123,7 @@ export default {
           <textarea
             v-else
             ref="textareas"
-            :id="key"
+            :id="`${key}-${setting.guid}`"
             rows="1"
             class="flex-1 bg-slate-700 py-1 px-3 leading-snug resize-none"
             @input="(e) => textareaUpdate(e, index, key)"
