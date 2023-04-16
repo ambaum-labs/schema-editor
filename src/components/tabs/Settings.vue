@@ -65,11 +65,17 @@ export default {
     },
 
     changeSetting(index, key, value) {
-      let newSetting = { ...this.settings[index], [key]: value, expanded: true };
+      let newSetting = { expanded: true, ...this.settings[index], [key]: value };
       if (key === 'type') {
         newSetting = updateTypedFields(newSetting);
       }
       this.settings[index] = newSetting;
+
+      if (key === 'expanded' && value) {
+        this.$nextTick(() => {
+          this.$refs.textareas?.forEach(textarea => this.resizeTextarea(textarea));
+        });
+      }
     },
 
     addField(index, input) {
@@ -102,7 +108,7 @@ export default {
     >
       <button
         class="p-2 bg-slate-800 text-left"
-        @click="setting.expanded = !setting.expanded"
+        @click="changeSetting(index, 'expanded', !setting.expanded)"
       >
         {{ displayName(setting) }}
       </button>
