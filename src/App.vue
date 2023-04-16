@@ -1,17 +1,62 @@
 <script>
-import AmbaumLogo from './components/icons/AmbaumLogo.vue';
-import ShopifyLogo from './components/icons/ShopifyLogo.vue';
-import SchemaEditor from './components/SchemaEditor.vue';
-import BlocksEditor from './components/BlocksEditor.vue';
-import SchemaCode from './components/SchemaCode.vue';
+import AmbaumLogo from '@/components/icons/AmbaumLogo.vue';
+import ShopifyLogo from '@/components/icons/ShopifyLogo.vue';
+import TabbedContent from '@/components/TabbedContent.vue';
+import Settings from '@/components/tabs/Settings.vue';
+import Locales from '@/components/tabs/Locales.vue';
+import General from '@/components/tabs/General.vue';
+import Blocks from '@/components/tabs/Blocks.vue';
+import Presets from '@/components/tabs/Presets.vue';
+import Default from '@/components/tabs/Default.vue';
+import Code from '@/components/tabs/Code.vue';
+import Saved from '@/components/tabs/Saved.vue';
+import Options from '@/components/tabs/Options.vue';
 
 export default {
   components: {
     AmbaumLogo,
     ShopifyLogo,
-    SchemaEditor,
-    BlocksEditor,
-    SchemaCode,
+    TabbedContent,
+    General,
+    Settings,
+    Locales,
+    Blocks,
+    Presets,
+    Default,
+    Code,
+    Saved,
+    Options,
+  },
+
+  data() {
+    return {
+      cards: [
+        {
+          default: 'general',
+          tabs: [
+            { title: 'General', value: 'general', component: General },
+            { title: 'Settings', value: 'settings', component: Settings },
+            { title: 'Locales', value: 'locales', component: Locales },
+          ],
+        },
+        {
+          default: 'blocks',
+          tabs: [
+            { title: 'Blocks', value: 'blocks', component: Blocks },
+            { title: 'Presets', value: 'presets', component: Presets },
+            { title: 'Default', value: 'default', component: Default },
+          ],
+        },
+        {
+          default: 'code',
+          tabs: [
+            { title: 'Code', value: 'code', component: Code },
+            { title: 'Saved', value: 'saved', component: Saved },
+            { title: 'Options', value: 'options', component: Options },
+          ],
+        },
+      ],
+    };
   },
 };
 </script>
@@ -33,8 +78,10 @@ export default {
   </header>
 
   <main class="flex flex-1 py-5 pl-5 max-h-[calc(100vh-65px)]">
-    <SchemaEditor class="basis-1/3 mr-5" />
-    <BlocksEditor class="basis-1/3 mr-5" />
-    <SchemaCode class="basis-1/3 mr-5" />
+    <TabbedContent
+      v-for="card in cards"
+      v-bind="card"
+      class="basis-1/3 mr-5"
+    />
   </main>
 </template>
