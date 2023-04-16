@@ -4,6 +4,31 @@ import { settingTypes, hiddenFields, createSetting, updateTypedFields } from '..
 export default {
   props: {
     settings: { type: Array, default: () => ([]) },
+    active: { type: Boolean, default: false },
+  },
+
+  watch: {
+    active: {
+      immediate: true,
+      handler(isActive) {
+        if (isActive) {
+          this.$nextTick(() => {
+            this.$refs.textareas?.forEach(textarea => this.resizeTextarea(textarea));
+          });
+        }
+      },
+    },
+
+    settings: {
+      immediate: true,
+      handler() {
+        if (this.active) {
+          this.$nextTick(() => {
+            this.$refs.textareas?.forEach(textarea => this.resizeTextarea(textarea));
+          });
+        }
+      },
+    },
   },
 
   computed: {
@@ -47,13 +72,14 @@ export default {
       input.value = '';
     },
 
-    textareaUpdate({ currentTarget }, index, key) {
-      currentTarget.style.height = 'auto';
-      const computed = window.getComputedStyle(currentTarget);
-      currentTarget.style.height = `${currentTarget.scrollHeight}px`;
+    resizeTextarea(textarea) {
+      textarea.style.height = `${textarea.scrollHeight}px`;
+    },
 
+    textareaUpdate({ currentTarget }, index, key) {
+      this.resizeTextarea(currentTarget);
       this.changeSetting(index, key, currentTarget.value);
-    }
+    },
   },
 };
 </script>
@@ -95,6 +121,7 @@ export default {
           </select>
           <textarea
             v-else
+            ref="textareas"
             :id="key"
             rows="1"
             class="flex-1 bg-slate-700 py-1 px-3 leading-snug resize-none"

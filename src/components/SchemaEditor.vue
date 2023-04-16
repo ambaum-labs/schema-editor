@@ -107,6 +107,7 @@ export default {
       <div v-show="activeTab === 'settings'">
         <Settings
           :settings="settings"
+          :active="activeTab === 'settings'"
           @update="(index, setting) => $emit('setSetting', index, setting)"
         />
       </div>
