@@ -46,6 +46,14 @@ export default {
       this.changeSetting(index, input.value, '');
       input.value = '';
     },
+
+    textareaUpdate({ currentTarget }, index, key) {
+      currentTarget.style.height = 'auto';
+      const computed = window.getComputedStyle(currentTarget);
+      currentTarget.style.height = `${currentTarget.scrollHeight}px`;
+
+      this.changeSetting(index, key, currentTarget.value);
+    }
   },
 };
 </script>
@@ -69,29 +77,29 @@ export default {
       >
         <div
           v-for="([key, value]) in settingFields(setting)"
-          class="flex items-center px-2 mb-3"
+          class="flex items-start px-2 mb-3"
         >
           <label
             :for="`${key}-${setting.guid}`"
-            class="w-[85px] mr-3"
+            class="w-[85px] leading-none py-2 mr-3"
           >{{ key }}</label>
           <select
             v-if="key === 'type'"
             :id="`${key}-${setting.guid}`"
-            class="flex-1 bg-slate-800 py-1.5 px-2 text-sm leading-none"
+            class="flex-1 bg-slate-800 py-2 px-2 leading-none"
             @change="(e) => changeSetting(index, 'type', e.currentTarget.value)"
           >
             <option v-for="type in inputTypes" :value="type" :selected="type === setting.type">
               {{ type }}
             </option>
           </select>
-          <input
+          <textarea
             v-else
             :id="key"
-            class="flex-1 bg-slate-700 py-1.5 px-3 leading-none"
-            :value="value"
-            @input="(e) => changeSetting(index, key, e.currentTarget.value)"
-          >
+            rows="1"
+            class="flex-1 bg-slate-700 py-1 px-3 leading-snug resize-none"
+            @input="(e) => textareaUpdate(e, index, key)"
+          >{{ value }}</textarea>
         </div>
         <select
           ref="fields"
