@@ -1,24 +1,25 @@
 <script>
+import { mapState, mapActions } from 'pinia';
 import Card from './Card.vue';
 import Tabs from './Tabs.vue';
+import { useSchemaStore } from '@/stores/schema';
+import { useConfigurationStore } from '@/stores/configurations';
 
 export default {
-  props: {
-    schema: { type: String, default: '' },
-    savedConfigurations: { type: Array, default: () => ([]) },
-  },
-
   components: {
     Card,
     Tabs,
   },
 
   watch: {
-    schema(newValue) {
-      this.code = newValue;
+    schema: {
+      immediate: true,
+      handler(newValue) {
+        this.code = newValue;
+      },
     },
 
-    savedConfigurations: {
+    configurations: {
       immediate: true,
       handler(newConfigurations) {
         URL.revokeObjectURL(this.exportUrl);
@@ -31,6 +32,15 @@ export default {
     },
   },
 
+  computed: {
+    ...mapState(useSchemaStore, [
+      'schema',
+    ]),
+    ...mapState(useConfigurationStore, [
+      'configurations',
+    ]),
+  },
+
   data() {
     return {
       tabs: [
@@ -39,19 +49,34 @@ export default {
         { title: 'Options', value: 'options' },
       ],
       activeTab: 'code',
-      code: this.schema,
+      code: '',
       exportUrl: null,
     };
   },
 
+  created() {
+    this.loadSaved();
+  },
+
   methods: {
-    saveConfiguration() {
-      this.$emit('saveConfiguration', this.$refs.configurationName.value.trim());
+    ...mapActions(useSchemaStore, [
+      'loadFromSchema',
+    ]),
+
+    ...mapActions(useConfigurationStore, [
+      'loadSaved',
+      'loadConfiguration',
+      'saveConfiguration',
+      'deleteConfiguration',
+    ]),
+
+    saveCurrent() {
+      this.saveConfiguration(this.$refs.configurationName.value.trim());
       this.$refs.configurationName.value = '';
     },
 
-    loadConfiguration(name) {
-      this.$emit('loadConfiguration', name);
+    loadSelected(name) {
+      this.loadConfiguration(name);
       this.activeTab = 'code';
     },
   },
@@ -82,7 +107,7 @@ export default {
           <p class="text-sm mr-3">To work with an existing schema, paste it and click import</p>
           <button
             class="rounded-md px-5 py-1 bg-yellow-400 text-slate-900 font-semibold uppercase text-sm"
-            @click="$emit('import', code)"
+            @click="loadFromSchema"
           >Import</button>
         </div>
       </div>
@@ -100,37 +125,37 @@ export default {
             ref="configurationName"
             id="configuration-name"
             class="flex-1 bg-slate-700 py-1.5 px-3 mr-6 leading-none"
-            @keyup.enter="saveConfiguration"
+            @keyup.enter="saveCurrent"
           >
           <button
             class="rounded-md px-5 py-1 bg-yellow-400 text-slate-900 font-semibold uppercase text-sm"
-            @click="saveConfiguration"
+            @click="saveCurrent"
           >Save</button>
         </div>
         <h2 class="text-lg font-semibold mb-3">Saved Configurations</h2>
         <div class="overflow-y-auto flex-1 flex flex-col bg-slate-700">
           <div
-            v-for="configuration in savedConfigurations"
+            v-for="configuration in configurations"
             :key="configuration.name"
             class="flex items-start border-t border-slate-900 last:border-b py-2 px-3"
           >
             <div class="flex-1">{{ configuration.name }}</div>
             <button
               class="ml-5 px-2 py-0.5 font-semibold uppercase text-sm"
-              @click="() => loadConfiguration(configuration.name)"
+              @click="() => loadSelected(configuration.name)"
             >
               Load
             </button>
             <button
               class="px-2 py-0.5 text-red-300 font-semibold uppercase text-sm"
-              @click="$emit('deleteConfiguration', configuration.name)"
+              @click="() => deleteConfiguration(configuration.name)"
             >
               Delete
             </button>
           </div>
         </div>
         <div class="flex items-center pt-3">
-          <p class="text-sm mr-3">Save or load your configurations from file</p>
+          <p class="text-sm mr-3 flex-1">Save or load your configurations from file</p>
           <button
             class="rounded-md px-5 py-1 mr-3 bg-yellow-400 text-slate-900 font-semibold uppercase text-sm"
             @click=""

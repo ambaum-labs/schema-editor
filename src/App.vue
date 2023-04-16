@@ -4,7 +4,6 @@ import ShopifyLogo from './components/icons/ShopifyLogo.vue';
 import SchemaEditor from './components/SchemaEditor.vue';
 import BlocksEditor from './components/BlocksEditor.vue';
 import SchemaCode from './components/SchemaCode.vue';
-import generateSchema from './schema';
 
 export default {
   components: {
@@ -13,92 +12,6 @@ export default {
     SchemaEditor,
     BlocksEditor,
     SchemaCode,
-  },
-
-  computed: {
-    schema() {
-      return generateSchema({
-        ...this.general,
-        settings: this.settings,
-        blocks: this.blocks,
-        presets: this.presets,
-      });
-    },
-  },
-
-  data() {
-    return {
-      general: {
-        name: '',
-        tag: '',
-        sectionClass: '',
-        limit: null,
-        maxBlocks: null,
-      },
-      settings: [],
-      blocks: [],
-      presets: [],
-      savedConfigurations: [],
-    };
-  },
-
-  created() {
-    const savedJSON = localStorage.getItem('savedConfigurations');
-    if (!savedJSON) {
-      return;
-    }
-
-    try {
-      this.savedConfigurations = JSON.parse(savedJSON);
-    } catch(err) {
-      console.error('Failed to parse configurations');
-    }
-  },
-
-  methods: {
-    loadFromSchema(newSchema) {
-      const jsonString = newSchema.replace(/\{%[^%]+%\}/g, '').trim();
-      try {
-        const { name, tag, class: sectionClass, limit, max_blocks: maxBlocks, settings, blocks, presets } = JSON.parse(jsonString);
-        this.general.name = name || this.general.name;
-        this.general.tag = tag || this.general.tag;
-        this.general.sectionClass = sectionClass || this.general.sectionClass;
-        this.general.limit = limit || this.general.limit;
-        this.general.maxBlocks = maxBlocks || this.general.maxBlocks;
-        this.settings = settings || this.settings;
-        this.blocks = blocks || this.blocks;
-        this.presets = presets || this.presets;
-      } catch(err) {
-        console.error('Schema parsing failed');
-      }
-    },
-
-    saveConfiguration(name) {
-      this.savedConfigurations.push({
-        name,
-        general: this.general,
-        settings: this.settings,
-        blocks: this.blocks,
-        presets: this.presets,
-        default: this.default,
-      });
-      localStorage.setItem('savedConfigurations', JSON.stringify(this.savedConfigurations));
-    },
-
-    loadConfiguration(selectedName) {
-      const { general, settings, blocks, presets, default: defaultSettings } = this.savedConfigurations.find(({ name }) => name === selectedName);
-      this.general = general;
-      this.settings = settings;
-      this.blocks = blocks;
-      this.presets = presets;
-      this.default = defaultSettings;
-    },
-
-    deleteConfiguration(selectedName) {
-      const index = this.savedConfigurations.findIndex(({ name }) => name === selectedName);
-      this.savedConfigurations.splice(index, 1);
-      localStorage.setItem('savedConfigurations', JSON.stringify(this.savedConfigurations));
-    },
   },
 };
 </script>
@@ -120,27 +33,8 @@ export default {
   </header>
 
   <main class="flex flex-1 py-5 pl-5 max-h-[calc(100vh-65px)]">
-    <SchemaEditor class="basis-1/3 mr-5"
-      v-bind="general"
-      :settings="settings"
-      @setGeneral="(key, value) => general[key] = value"
-      @setSetting="(index, setting) => {
-        if (index < settings.length) {
-          settings[index] = setting;
-        } else {
-          settings.push(setting);
-        }
-      }"
-    />
+    <SchemaEditor class="basis-1/3 mr-5" />
     <BlocksEditor class="basis-1/3 mr-5" />
-    <SchemaCode
-      class="basis-1/3 mr-5"
-      :schema="schema"
-      :savedConfigurations="savedConfigurations"
-      @import="loadFromSchema"
-      @saveConfiguration="saveConfiguration"
-      @loadConfiguration="loadConfiguration"
-      @deleteConfiguration="deleteConfiguration"
-    />
+    <SchemaCode class="basis-1/3 mr-5" />
   </main>
 </template>

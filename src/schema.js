@@ -25,7 +25,7 @@ function stringifyObjects(objects, indent, level) {
   }).join(',\n');
 }
 
-function generateSchema({ name, tag, sectionClass, limit, maxBlocks, settings, blocks, presets }) {
+export function generateSchema({ name, tag, sectionClass, limit, maxBlocks, settings, blocks, presets }) {
   let indent = 2;
   let level = 1;
   let schema = '{% schema %}\n{\n';

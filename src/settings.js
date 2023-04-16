@@ -167,7 +167,7 @@ export function updateTypedFields(setting) {
   invalidFields.forEach(property => delete newSetting[property]);
   requiredFields.forEach(property => {
     if (typeof newSetting[property] === 'undefined') {
-      newSetting[property] = null;
+      newSetting[property] = '';
     }
   });
   return newSetting;

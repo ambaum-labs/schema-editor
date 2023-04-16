@@ -1,24 +1,23 @@
 <script>
+import { mapWritableState, mapActions } from 'pinia';
 import Card from './Card.vue';
 import Tabs from './Tabs.vue';
 import Settings from './Settings.vue';
+import { useSchemaStore } from '@/stores/schema';
 
 export default {
-  props: {
-    name: { type: String, default: '' },
-    tag: '',
-    sectionClass: '',
-    limit: 0,
-    settings: { type: Array, default: () => ([]) },
-  },
-
   components: {
     Card,
     Tabs,
     Settings,
   },
 
-  emits: ['setGeneral', 'addSetting', 'setSetting'],
+  computed: {
+    ...mapWritableState(useSchemaStore, [
+      'general',
+      'settings',
+    ]),
+  },
 
   data() {
     return {
@@ -58,8 +57,8 @@ export default {
           <input
             id="name"
             class="flex-1 bg-slate-700 py-1.5 px-3 leading-none"
-            :value="name"
-            @input="(e) => $emit('setGeneral', 'name', e.currentTarget.value.trim())"
+            :value="general.name"
+            @input="({ currentTarget }) => general.name = currentTarget.value.trim()"
           >
         </div>
         <div class="flex items-center mb-3">
@@ -70,8 +69,8 @@ export default {
           <select
             id="tag"
             class="flex-1 bg-slate-700 py-1.5 px-3 leading-none"
-            :value="tag"
-            @input="(e) => $emit('setGeneral', 'tag', e.currentTarget.value.trim())"
+            :value="general.tag"
+            @input="({ currentTarget }) => general.tag = currentTarget.value.trim()"
           >
             <option></option>
             <option v-for="tag in validTags">{{ tag }}</option>
@@ -85,8 +84,8 @@ export default {
           <input
             id="class"
             class="flex-1 bg-slate-700 py-1.5 px-3 leading-none"
-            :value="sectionClass"
-            @input="(e) => $emit('setGeneral', 'sectionClass', e.currentTarget.value.trim())"
+            :value="general.sectionClass"
+            @input="({ currentTarget }) => general.sectionClass = currentTarget.value.trim()"
           >
         </div>
         <div class="flex items-center mb-3">
@@ -99,8 +98,8 @@ export default {
             type="number"
             class="flex-1 bg-slate-700 py-1.5 px-3 leading-none"
             min="0"
-            :value="limit"
-            @input="(e) => $emit('setGeneral', 'limit', e.currentTarget.value >= 0 ? Number(e.currentTarget.value) : 0)"
+            :value="general.limit"
+            @input="({ currentTarget }) => (general.limit = currentTarget.value >= 0 ? Number(currentTarget.value) : 0)"
           >
         </div>
       </div>
@@ -108,7 +107,13 @@ export default {
         <Settings
           :settings="settings"
           :active="activeTab === 'settings'"
-          @update="(index, setting) => $emit('setSetting', index, setting)"
+          @update="(index, setting) => {
+            if (index < settings.length) {
+              settings[index] = setting;
+            } else {
+              settings.push(setting);
+            }
+          }"
         />
       </div>
       <div v-show="activeTab === 'locales'">
