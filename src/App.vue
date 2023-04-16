@@ -81,6 +81,7 @@ export default {
     <TabbedContent
       v-for="card in cards"
       v-bind="card"
+      class="max-h-[calc(100vh-105px)]"
     />
   </main>
 </template>

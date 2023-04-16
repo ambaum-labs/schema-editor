@@ -584,6 +584,14 @@ video {
   max-height: calc(100vh - 65px);
 }
 
+.max-h-\[calc\(100vh-85px\)\] {
+  max-height: calc(100vh - 85px);
+}
+
+.max-h-\[calc\(100vh-105px\)\] {
+  max-height: calc(100vh - 105px);
+}
+
 .w-\[60px\] {
   width: 60px;
 }
