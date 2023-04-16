@@ -8,11 +8,8 @@ function stringifyObjects(objects, indent, level) {
   return objects.map((obj) => {
     let objectString = indentString('{\n', indent, level);
     level++;
-    const entries = Object.entries(obj);
+    const entries = Object.entries(obj).filter(([key]) => !hiddenFields.includes(key));
     entries.forEach(([key, value], index) => {
-      if (hiddenFields.includes(key)) {
-        return true;
-      }
       objectString += indentString(`"${key}": ${JSON.stringify(value)}`, indent, level);
       if (index < entries.length - 1) {
         objectString += ',';
