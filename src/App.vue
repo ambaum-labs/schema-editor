@@ -77,11 +77,10 @@ export default {
     </div>
   </header>
 
-  <main class="flex flex-1 py-5 pl-5 max-h-[calc(100vh-65px)]">
+  <main class="grid grid-cols-3 gap-5 flex-1 p-5 max-h-[calc(100vh-65px)]">
     <TabbedContent
       v-for="card in cards"
       v-bind="card"
-      class="basis-1/3 mr-5"
     />
   </main>
 </template>
