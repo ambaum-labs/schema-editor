@@ -1,11 +1,17 @@
 <script>
 import Card from './Card.vue';
 import Tabs from './Tabs.vue';
+import Blocks from '@/components/tabs/Blocks.vue';
+import Presets from '@/components/tabs/Presets.vue';
+import Default from '@/components/tabs/Default.vue';
 
 export default {
   components: {
     Card,
     Tabs,
+    Blocks,
+    Presets,
+    Default,
   },
 
   data() {
@@ -29,15 +35,9 @@ export default {
       @change="(tab) => activeTab = tab"
     />
     <div class="pb-4 px-5 flex-1 overflow-y-auto">
-      <div v-show="activeTab === 'blocks'">
-        <h1 class="text-lg font-semibold mb-3">Blocks</h1>
-      </div>
-      <div v-show="activeTab === 'presets'">
-        <h1 class="text-lg font-semibold mb-3">Presets</h1>
-      </div>
-      <div v-show="activeTab === 'default'">
-        <h1 class="text-lg font-semibold mb-3">Default</h1>
-      </div>
+      <Blocks :active="activeTab === 'blocks'" />
+      <Presets :active="activeTab === 'presets'" />
+      <Default :active="activeTab === 'default'" />
     </div>
   </Card>
 </template>

@@ -1,9 +1,10 @@
 <script>
-import { settingTypes, hiddenFields, createSetting, updateTypedFields } from '../settings';
+import { mapWritableState, mapActions } from 'pinia';
+import { useSchemaStore } from '@/stores/schema';
+import { settingTypes, hiddenFields, createSetting, updateTypedFields } from '@/settings';
 
 export default {
   props: {
-    settings: { type: Array, default: () => ([]) },
     active: { type: Boolean, default: false },
   },
 
@@ -32,6 +33,10 @@ export default {
   },
 
   computed: {
+    ...mapWritableState(useSchemaStore, [
+      'settings',
+    ]),
+
     displayName() {
       return (setting) => setting.id || setting.label || 'New Setting';
     },
@@ -56,7 +61,7 @@ export default {
 
   methods: {
     addSetting() {
-      this.$emit('update', this.settings.length, createSetting());
+      this.settings.push(createSetting());
     },
 
     changeSetting(index, key, value) {
@@ -64,7 +69,7 @@ export default {
       if (key === 'type') {
         newSetting = updateTypedFields(newSetting);
       }
-      this.$emit('update', index, newSetting);
+      this.settings[index] = newSetting;
     },
 
     addField(index, input) {
@@ -86,7 +91,10 @@ export default {
 </script>
 
 <template>
-  <div class="flex flex-col">
+  <div
+    v-show="active"
+    class="flex flex-col"
+  >
     <div
       v-for="(setting, index) in settings"
       :key="setting.guid"
