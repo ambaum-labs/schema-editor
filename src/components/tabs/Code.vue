@@ -46,7 +46,7 @@ export default {
       <p class="text-sm text-right">Schema will update automatically</p>
     </div>
     <textarea
-      class="flex-1 bg-slate-700 p-3"
+      class="flex-1 min-h-[200px] xl:min-h-0 bg-slate-700 p-3"
       v-model="code"
     />
     <div class="flex items-center justify-between mt-3">

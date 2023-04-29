@@ -121,7 +121,7 @@ export default {
       class="flex flex-col border-slate-700 border-2 mb-6"
     >
       <button
-        class="p-2 bg-slate-800 text-left"
+        class="p-2 bg-nebula text-left"
         @click="blocks[index].expanded = !block.expanded"
       >
         {{ displayName(block) }}

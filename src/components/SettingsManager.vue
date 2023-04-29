@@ -114,7 +114,7 @@ export default {
     >
       <button
         :class="headerClasses"
-        class="px-2 bg-slate-800 text-left"
+        class="px-2 bg-twilight text-left"
         @click="changeSetting(index, 'expanded', !setting.expanded)"
       >
         {{ displayName(setting) }}
@@ -144,7 +144,7 @@ export default {
           <select
             v-if="key === 'type'"
             :id="`${key}-${setting.guid}`"
-            class="flex-1 bg-slate-700 py-1.5 px-3 leading-snug"
+            class="flex-1 min-w-0 bg-slate-700 py-1.5 px-3 leading-snug"
             @change="(e) => changeSetting(index, 'type', e.currentTarget.value)"
           >
             <option v-for="type in inputTypes" :value="type" :selected="type === setting.type">
