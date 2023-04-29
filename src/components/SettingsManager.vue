@@ -50,7 +50,15 @@ export default {
     },
 
     inputTypes() {
-      return settingTypes.map(({ type }) => type);
+      const options = [];
+      const groups = Array.from(new Set(settingTypes.map(({ group }) => group)));
+      groups.forEach(group => {
+        options.push([
+          group,
+          settingTypes.filter(setting => setting.group === group).map(({ type }) => type),
+        ]);
+      });
+      return options;
     },
 
     settingFields() {
@@ -147,9 +155,15 @@ export default {
             class="flex-1 min-w-0 bg-slate-700 py-1.5 px-3 leading-snug"
             @change="(e) => changeSetting(index, 'type', e.currentTarget.value)"
           >
-            <option v-for="type in inputTypes" :value="type" :selected="type === setting.type">
-              {{ type }}
-            </option>
+            <optgroup
+              v-for="([label, types]) in inputTypes"
+              :key="label"
+              :label="`${label} settings`"
+            >
+              <option v-for="type in types" :value="type" :selected="type === setting.type">
+                {{ type }}
+              </option>
+            </optgroup>
           </select>
           <textarea
             v-else
