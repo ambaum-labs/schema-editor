@@ -132,7 +132,7 @@ export default {
       >
         <div
           v-if="additionalFields(block).length"
-          class="flex items-start px-2 mb-3"
+          class="flex items-start px-4 mb-3"
         >
           <select
             class="flex-1 bg-slate-700 py-1.5 px-3 leading-snug"
@@ -147,7 +147,7 @@ export default {
         <div
           v-for="([key, value]) in blockFields(block)"
           :key="key"
-          class="flex items-start px-2 mb-3"
+          class="flex items-start px-4 mb-3"
         >
           <label
             :for="`block-${index}-key`"
@@ -164,11 +164,13 @@ export default {
         </div>
         <div
           v-if="block.settings"
-          class="flex flex-col px-2 pt-2 mb-3 border-t border-slate-800"
+          class="flex flex-col px-4 pt-2 mb-3 border-t border-slate-800"
         >
           <h3 class="mb-3">settings</h3>
           <SettingsManager
+            :active="active"
             :settings="block.settings"
+            :compact="true"
           />
         </div>
       </div>

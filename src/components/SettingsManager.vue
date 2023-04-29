@@ -5,6 +5,7 @@ export default {
   props: {
     active: { type: Boolean, default: true },
     settings: { type: Array, default: () => ([]) },
+    compact: { type: Boolean, default: false },
   },
 
   watch: {
@@ -32,6 +33,18 @@ export default {
   },
 
   computed: {
+    settingClasses() {
+      return [
+        this.compact ? 'border' : 'border-2',
+      ];
+    },
+
+    headerClasses() {
+      return [
+        this.compact ? 'py-1' : 'py-2',
+      ];
+    },
+
     displayName() {
       return (setting) => setting.id || setting.label || 'New Setting';
     },
@@ -96,10 +109,12 @@ export default {
     <div
       v-for="(setting, index) in settings"
       :key="setting.guid"
-      class="flex flex-col border-slate-800 border mb-6"
+      :class="settingClasses"
+      class="flex flex-col border-slate-700 mb-3"
     >
       <button
-        class="p-2 bg-slate-800 text-left"
+        :class="headerClasses"
+        class="px-2 bg-slate-800 text-left"
         @click="changeSetting(index, 'expanded', !setting.expanded)"
       >
         {{ displayName(setting) }}
@@ -110,7 +125,7 @@ export default {
       >
         <select
           :class="{ hidden: !additionalFields(setting).length }"
-          class="flex-1 bg-slate-700 py-1.5 px-3 mx-2 mb-3 leading-snug"
+          class="flex-1 bg-slate-700 py-1.5 px-3 mx-4 mb-3 leading-snug"
           @change="(e) => addField(index, e.currentTarget)"
         >
           <option value="">Add Property</option>
@@ -120,7 +135,7 @@ export default {
         </select>
         <div
           v-for="([key, value]) in settingFields(setting)"
-          class="flex items-start px-2 mb-3"
+          class="flex items-start px-4 mb-3"
         >
           <label
             :for="`${key}-${setting.guid}`"
