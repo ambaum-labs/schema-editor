@@ -10,9 +10,17 @@ function stringifyObjects(objects, indent, level) {
     level++;
     const entries = Object.entries(obj).filter(([key]) => !hiddenFields.includes(key));
     entries.forEach(([key, value], index) => {
-      objectString += indentString(`"${key}": ${JSON.stringify(value)}`, indent, level);
-      if (index < entries.length - 1) {
-        objectString += ',';
+      if (Array.isArray(value)) {
+        objectString += indentString(`"${key}": [\n`, indent, level);
+        level++;
+        objectString += stringifyObjects(value, indent, level) + '\n';
+        level--;
+        objectString += indentString(']', indent, level);
+      } else {
+        objectString += indentString(`"${key}": ${JSON.stringify(value)}`, indent, level);
+        if (index < entries.length - 1) {
+          objectString += ',';
+        }
       }
       objectString += '\n';
     });

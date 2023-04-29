@@ -29,7 +29,10 @@ export default {
 </script>
 
 <template>
-  <div v-show="active">
+  <div
+    v-show="active"
+    class="pt-1"
+  >
     <div class="flex items-center mb-3">
       <label
         for="name"

@@ -1,5 +1,6 @@
 import { defineStore } from 'pinia';
 import generateSchema from '@/schema';
+import { createSetting } from '@/settings';
 
 export const useSchemaStore = defineStore('schema', {
   state: () => ({
@@ -10,7 +11,9 @@ export const useSchemaStore = defineStore('schema', {
       limit: null,
       maxBlocks: null,
     },
-    settings: [],
+    settings: [
+      createSetting(),
+    ],
     blocks: [],
     presets: [],
     default: {},

@@ -118,7 +118,7 @@ export default {
     <div
       v-for="(block, index) in blocks"
       :key="block.guid"
-      class="flex flex-col border-slate-800 border mb-6"
+      class="flex flex-col border-slate-700 border-2 mb-6"
     >
       <button
         class="p-2 bg-slate-800 text-left"
@@ -130,6 +130,20 @@ export default {
         v-show="block.expanded"
         class="flex flex-col pt-3"
       >
+        <div
+          v-if="additionalFields(block).length"
+          class="flex items-start px-2 mb-3"
+        >
+          <select
+            class="flex-1 bg-slate-700 py-1.5 px-3 leading-snug"
+            @change="(e) => addField(index, e.currentTarget)"
+          >
+            <option value="">Add Property</option>
+            <option v-for="field in additionalFields(block)" :value="field">
+              {{ field }}
+            </option>
+          </select>
+        </div>
         <div
           v-for="([key, value]) in blockFields(block)"
           :key="key"
@@ -149,24 +163,10 @@ export default {
           >
         </div>
         <div
-          v-if="additionalFields(block).length"
-          class="flex items-start px-2 mb-3"
-        >
-          <select
-            class="flex-1 bg-slate-800 py-1.5 px-2 text-sm leading-none"
-            @change="(e) => addField(index, e.currentTarget)"
-          >
-            <option value="">Add Property</option>
-            <option v-for="field in additionalFields(block)" :value="field">
-              {{ field }}
-            </option>
-          </select>
-        </div>
-        <div
           v-if="block.settings"
-          class="flex items-start px-2 pt-2 mb-3 border-t border-slate-800"
+          class="flex flex-col px-2 pt-2 mb-3 border-t border-slate-800"
         >
-          <label class="w-[90px] min-w-[90px] mr-3">settings</label>
+          <h3 class="mb-3">settings</h3>
           <SettingsManager
             :settings="block.settings"
           />
@@ -175,7 +175,7 @@ export default {
     </div>
 
     <button
-      class="mt-5 rounded-md px-5 py-1 bg-yellow-400 text-slate-900 font-semibold uppercase text-sm"
+      class="mt-5 rounded-md px-5 py-1 bg-slate-700 font-semibold uppercase text-sm"
       @click="addBlock"
     >Add Block</button>
   </div>
