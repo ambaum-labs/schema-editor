@@ -516,6 +516,14 @@ video {
   --tw-backdrop-sepia:  ;
 }
 
+.col-span-2 {
+  grid-column: span 2 / span 2;
+}
+
+.col-span-1 {
+  grid-column: span 1 / span 1;
+}
+
 .mx-4 {
   margin-left: 1rem;
   margin-right: 1rem;
@@ -589,14 +597,6 @@ video {
   height: 100%;
 }
 
-.max-h-\[calc\(100vh-105px\)\] {
-  max-height: calc(100vh - 105px);
-}
-
-.max-h-\[calc\(100vh-65px\)\] {
-  max-height: calc(100vh - 65px);
-}
-
 .min-h-\[200px\] {
   min-height: 200px;
 }
@@ -651,14 +651,6 @@ video {
 
 .justify-between {
   justify-content: space-between;
-}
-
-.gap-5 {
-  gap: 1.25rem;
-}
-
-.gap-8 {
-  gap: 2rem;
 }
 
 .gap-10 {
@@ -912,13 +904,39 @@ video {
   border-bottom-width: 1px;
 }
 
+@media (min-width: 768px) {
+  .md\:col-span-2 {
+    grid-column: span 2 / span 2;
+  }
+
+  .md\:mb-0 {
+    margin-bottom: 0px;
+  }
+
+  .md\:min-h-\[400px\] {
+    min-height: 400px;
+  }
+
+  .md\:grid-cols-2 {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .md\:flex-row {
+    flex-direction: row;
+  }
+}
+
 @media (min-width: 1280px) {
-  .xl\:max-h-\[calc\(100vh-65px\)\] {
-    max-height: calc(100vh - 65px);
+  .xl\:col-span-1 {
+    grid-column: span 1 / span 1;
   }
 
   .xl\:max-h-\[calc\(100vh-105px\)\] {
     max-height: calc(100vh - 105px);
+  }
+
+  .xl\:max-h-\[calc\(100vh-65px\)\] {
+    max-height: calc(100vh - 65px);
   }
 
   .xl\:min-h-0 {

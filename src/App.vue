@@ -63,12 +63,12 @@ export default {
 
 <template>
   <header class="flex-0 px-5">
-    <div class="flex items-center justify-between py-3">
-      <div class="flex items-center">
+    <div class="flex flex-col md:flex-row items-center justify-between py-3">
+      <div class="flex items-center mb-5 md:mb-0">
         <div class="pr-5 border-r-2 border-yellow-400">
           <ShopifyLogo height="40" width="140" />
         </div>
-        <h1 class="mt-1 ml-5 text-3xl font-semibold">Schema Editor</h1>
+        <h1 class="mt-1 ml-5 text-3xl font-semibold">Section Schema Editor</h1>
       </div>
       <a href="https://ambaum.com" target="_blank" class="text-xs text-center">
         Powered by
@@ -77,10 +77,14 @@ export default {
     </div>
   </header>
 
-  <main class="grid grid-cols-1 xl:grid-cols-3 gap-10 xl:gap-5 flex-1 p-5 xl:max-h-[calc(100vh-65px)]">
+  <main class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-10 xl:gap-5 flex-1 p-5 xl:max-h-[calc(100vh-65px)]">
     <TabbedContent
-      v-for="card in cards"
+      v-for="(card, index) in cards"
       v-bind="card"
+      :class="{
+        'md:col-span-2': index === cards.length - 1,
+        'xl:col-span-1': index === cards.length - 1,
+      }"
       class="xl:max-h-[calc(100vh-105px)]"
     />
   </main>

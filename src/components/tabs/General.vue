@@ -40,7 +40,7 @@ export default {
       >name</label>
       <input
         id="name"
-        class="flex-1 bg-slate-700 py-1.5 px-3 leading-none"
+        class="flex-1 min-w-0 bg-slate-700 py-1.5 px-3 leading-none"
         :value="general.name"
         @input="({ currentTarget }) => general.name = currentTarget.value.trim()"
       >
@@ -52,7 +52,7 @@ export default {
       >tag</label>
       <select
         id="tag"
-        class="flex-1 bg-slate-700 py-1.5 px-3 leading-none"
+        class="flex-1 min-w-0 bg-slate-700 py-1.5 px-3 leading-none"
         :value="general.tag"
         @input="({ currentTarget }) => general.tag = currentTarget.value.trim()"
       >
@@ -67,7 +67,7 @@ export default {
       >class</label>
       <input
         id="class"
-        class="flex-1 bg-slate-700 py-1.5 px-3 leading-none"
+        class="flex-1 min-w-0 bg-slate-700 py-1.5 px-3 leading-none"
         :value="general.sectionClass"
         @input="({ currentTarget }) => general.sectionClass = currentTarget.value.trim()"
       >
@@ -80,7 +80,7 @@ export default {
       <input
         id="limit"
         type="number"
-        class="flex-1 bg-slate-700 py-1.5 px-3 leading-none"
+        class="flex-1 min-w-0 bg-slate-700 py-1.5 px-3 leading-none"
         min="0"
         :value="general.limit"
         @input="({ currentTarget }) => (general.limit = currentTarget.value >= 0 ? Number(currentTarget.value) : 0)"

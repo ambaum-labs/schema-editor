@@ -93,7 +93,7 @@ export default {
       <input
         id="name"
         type="number"
-        class="flex-1 bg-slate-700 py-1.5 px-3 leading-none"
+        class="flex-1 min-w-0 bg-slate-700 py-1.5 px-3 leading-none"
         min="0"
         max="50"
         :value="general.maxBlocks"
