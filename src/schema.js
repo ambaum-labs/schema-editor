@@ -1,7 +1,7 @@
 const hiddenFields = ['guid', 'expanded'];
 
 function indentString(str, indent, level) {
-  return Array(indent * level).join(' ') + str;
+  return Array(indent * level).fill(' ').join('') + str;
 }
 
 function stringifyObjects(objects, indent, level) {
@@ -26,7 +26,6 @@ export function generateSchema({ name, tag, sectionClass, limit, maxBlocks, sett
   let indent = 2;
   let level = 1;
   let schema = '{% schema %}\n{\n';
-  level++;
   schema += indentString(`"name": "${name}",\n`, indent, level);
   if (tag) {
     schema += indentString(`"tag": "${tag}",\n`, indent, level);
@@ -45,12 +44,12 @@ export function generateSchema({ name, tag, sectionClass, limit, maxBlocks, sett
   schema += stringifyObjects(settings, indent, level) + '\n';
   level--;
   schema += indentString(`]`, indent, level);
-  level--;
   if (blocks.length) {
     schema += `,\n`;
     schema += indentString(`"blocks": [\n`, indent, level);
     level++;
     schema += stringifyObjects(blocks, indent, level) + '\n';
+    level--;
     schema += indentString(`]`, indent, level);
   }
   if (presets.length) {

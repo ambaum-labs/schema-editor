@@ -34,7 +34,7 @@ export default {
       <label
         for="name"
         class="w-[60px] mr-3"
-      >Name:</label>
+      >name</label>
       <input
         id="name"
         class="flex-1 bg-slate-700 py-1.5 px-3 leading-none"
@@ -46,7 +46,7 @@ export default {
       <label
         for="tag"
         class="w-[60px] mr-3"
-      >Tag:</label>
+      >tag</label>
       <select
         id="tag"
         class="flex-1 bg-slate-700 py-1.5 px-3 leading-none"
@@ -61,7 +61,7 @@ export default {
       <label
         for="class"
         class="w-[60px] mr-3"
-      >Class:</label>
+      >class</label>
       <input
         id="class"
         class="flex-1 bg-slate-700 py-1.5 px-3 leading-none"
@@ -73,7 +73,7 @@ export default {
       <label
         for="limit"
         class="w-[60px] mr-3"
-      >Limit:</label>
+      >limit</label>
       <input
         id="limit"
         type="number"

@@ -144,7 +144,6 @@ export default {
           >{{ value }}</textarea>
         </div>
         <select
-          ref="fields"
           :class="{ hidden: !additionalFields(setting).length }"
           class="flex-1 bg-slate-800 py-1.5 px-2 text-sm leading-none"
           @change="(e) => addField(index, e.currentTarget)"
