@@ -116,7 +116,7 @@ export default {
   <div class="flex flex-col flex-1 min-w-0">
     <div
       v-for="(setting, index) in settings"
-      :key="setting.guid"
+      :key="setting.uuid"
       :class="settingClasses"
       class="flex flex-col border-slate-700 mb-3"
     >
@@ -146,12 +146,12 @@ export default {
           class="flex items-start px-4 mb-3"
         >
           <label
-            :for="`${key}-${setting.guid}`"
+            :for="`${key}-${setting.uuid}`"
             class="min-w-[90px] w-[90px] leading-none py-1.5 mr-3"
           >{{ key }}</label>
           <select
             v-if="key === 'type'"
-            :id="`${key}-${setting.guid}`"
+            :id="`${key}-${setting.uuid}`"
             class="flex-1 min-w-0 bg-slate-700 py-1.5 px-3 leading-snug"
             @change="(e) => changeSetting(index, 'type', e.currentTarget.value)"
           >
@@ -168,7 +168,7 @@ export default {
           <textarea
             v-else
             ref="textareas"
-            :id="`${key}-${setting.guid}`"
+            :id="`${key}-${setting.uuid}`"
             rows="1"
             class="flex-1 min-w-0 bg-slate-700 py-1 px-3 leading-snug resize-none"
             @input="(e) => textareaUpdate(e, index, key)"
@@ -178,7 +178,7 @@ export default {
     </div>
 
     <button
-      class="rounded-md px-5 py-1 bg-slate-700 font-semibold uppercase text-sm"
+      class="rounded-md mt-5 px-5 py-1 bg-slate-700 font-semibold uppercase text-sm"
       @click="addSetting"
     >Add Setting</button>
   </div>

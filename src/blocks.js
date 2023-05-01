@@ -1,7 +1,5 @@
-import { guid } from '@/settings';
-
 export const hiddenFields = [
-  { field: 'guid', defaultValue: () => guid() },
+  { field: 'uuid', defaultValue: () => crypto.randomUUID() },
   { field: 'expanded', defaultValue: true },
 ];
 

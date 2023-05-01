@@ -117,8 +117,8 @@ export default {
 
     <div
       v-for="(block, index) in blocks"
-      :key="block.guid"
-      class="flex flex-col border-slate-700 border-2 mb-6"
+      :key="block.uuid"
+      class="flex flex-col border-slate-700 border-2 mb-3"
     >
       <button
         class="p-2 bg-nebula text-left"
@@ -150,11 +150,11 @@ export default {
           class="flex items-start px-4 mb-3"
         >
           <label
-            :for="`block-${index}-key`"
+            :for="`block-${index}-${key}`"
             class="w-[90px] min-w-[90px] mr-3"
           >{{ key }}</label>
           <input
-            :id="`block-${index}-key`"
+            :id="`block-${index}-${key}`"
             :type="fieldType(key)"
             :value="value"
             :readonly="block.type === '@app'"

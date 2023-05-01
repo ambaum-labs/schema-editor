@@ -1,5 +1,5 @@
 export const hiddenFields = [
-  { field: 'guid', defaultValue: () => guid() },
+  { field: 'uuid', defaultValue: () => crypto.randomUUID() },
   { field: 'expanded', defaultValue: true },
 ];
 
@@ -186,13 +186,17 @@ export const settingTypes = [
   },
 ];
 
-export function createSetting(type = 'text') {
-  const setting = { type };
+export function applyHiddenFields(item = {}) {
   hiddenFields.forEach(({ field, defaultValue }) => {
-    if (!setting[field]) {
-      setting[field] = typeof defaultValue === 'function' ? defaultValue() : defaultValue;
+    if (!item[field]) {
+      item[field] = typeof defaultValue === 'function' ? defaultValue() : defaultValue;
     }
   });
+  return item;
+}
+
+export function createSetting(type = 'text') {
+  const setting = applyHiddenFields({ type });
   return updateTypedFields(setting);
 }
 
@@ -212,18 +216,3 @@ export function updateTypedFields(setting) {
   });
   return newSetting;
 }
-
-/**
- * Generates a GUID string.
- * @returns {string} The generated GUID.
- * @example af8a8416-6e18-a307-bd9c-f2c947bbb3aa
- * @author Slavik Meltser.
- * @link http://slavik.meltser.info/?p=142
- */
-export function guid() {
-  function _p8(s) {
-    const p = (Math.random().toString(16)+"000000000").substr(2,8);
-    return s ? "-" + p.substr(0,4) + "-" + p.substr(4,4) : p ;
-  }
-  return _p8() + _p8(true) + _p8(true) + _p8();
-};
