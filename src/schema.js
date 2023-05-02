@@ -1,3 +1,5 @@
+import { useOptionsStore } from '@/stores/options';
+
 const hiddenFields = ['uuid', 'expanded'];
 
 function indentString(str, indent, level) {
@@ -63,10 +65,13 @@ function stringifyObjects(objects, indent, level) {
 }
 
 export function generateSchema({ name, tag, sectionClass, limit, maxBlocks, settings, blocks, presets, defaultPreset }) {
-  let indent = 2;
-  let level = 1;
+  const { codeOptions } = useOptionsStore();
+  let indent = codeOptions.tabSize;
+  let level = codeOptions.indentFirstRow ? 1 : 0;
 
-  let schema = '{% schema %}\n{\n';
+  let schema = '{% schema %}\n';
+  schema += indentString('{\n', indent, level);
+  level++;
   schema += indentString(`"name": "${name}",\n`, indent, level);
   if (tag) {
     schema += indentString(`"tag": "${tag}",\n`, indent, level);
@@ -109,7 +114,10 @@ export function generateSchema({ name, tag, sectionClass, limit, maxBlocks, sett
     level--
     schema += indentString('}', indent, level);
   }
-  schema += '\n}\n{% schema %}'
+  schema += '\n';
+  level--;
+  schema += indentString('}\n', indent, level);
+  schema += '{% schema %}';
 
   return schema;
 }

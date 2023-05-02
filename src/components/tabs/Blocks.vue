@@ -108,7 +108,7 @@ export default {
       <input
         id="app-block"
         type="checkbox"
-        class="bg-slate-700"
+        class="bg-slate-700 h-5 w-5"
         :checked="hasAppBlock"
         value="1"
         @input="({ currentTarget }) => toggleAppBlock(currentTarget.checked)"
