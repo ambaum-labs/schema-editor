@@ -1,5 +1,3 @@
-import { useOptionsStore } from '@/stores/options';
-
 const hiddenFields = ['uuid', 'expanded'];
 
 function indentString(str, indent, level) {
@@ -8,7 +6,8 @@ function indentString(str, indent, level) {
 
 function stringifyObject(obj, indent, level) {
   let objectString = '';
-  Object.entries(obj).filter(([key]) => !hiddenFields.includes(key)).forEach(([id, setting], index) => {
+  const entries = Object.entries(obj);
+  entries.filter(([key]) => !hiddenFields.includes(key)).forEach(([id, setting], index) => {
     if (Array.isArray(setting)) {
       objectString += indentString(`"${id}": [\n`, indent, level);
       level++;
@@ -24,7 +23,7 @@ function stringifyObject(obj, indent, level) {
     } else {
       objectString += indentString(`"${id}": ${JSON.stringify(setting)}`, indent, level);
     }
-    if (index < Object.entries(obj).length - 1) {
+    if (index < entries.length - 1) {
       objectString += ',';
     }
     objectString += '\n';
@@ -52,9 +51,9 @@ function stringifyObjects(objects, indent, level) {
         objectString += indentString('}', indent, level);
       } else {
         objectString += indentString(`"${key}": ${JSON.stringify(value)}`, indent, level);
-        if (index < entries.length - 1) {
-          objectString += ',';
-        }
+      }
+      if (index < entries.length - 1) {
+        objectString += ',';
       }
       objectString += '\n';
     });
@@ -64,10 +63,9 @@ function stringifyObjects(objects, indent, level) {
   }).join(',\n');
 }
 
-export function generateSchema({ name, tag, sectionClass, limit, maxBlocks, settings, blocks, presets, defaultPreset }) {
-  const { codeOptions } = useOptionsStore();
+export function generateSchema({ name, tag, sectionClass, limit, maxBlocks, settings, blocks, locales, presets, defaultPreset, codeOptions }) {
   let indent = codeOptions.tabSize;
-  let level = codeOptions.indentFirstRow ? 1 : 0;
+  let level = codeOptions.indentFirstLine ? 1 : 0;
 
   let schema = '{% schema %}\n';
   schema += indentString('{\n', indent, level);
@@ -97,6 +95,22 @@ export function generateSchema({ name, tag, sectionClass, limit, maxBlocks, sett
     schema += stringifyObjects(blocks, indent, level) + '\n';
     level--;
     schema += indentString(`]`, indent, level);
+  }
+  if (locales && Object.keys(locales).length) {
+    schema += `,\n`;
+    schema += indentString(`"locales": {\n`, indent, level);
+    level++;
+    const localesWithoutHidden = Object.entries(locales).filter(([key]) => !hiddenFields.includes(key));
+    const structuredLocales = localesWithoutHidden.reduce((carry, [language, { translations }]) => {
+      carry[language] = carry[language] || {};
+      translations.forEach(({ key, value }) => {
+        carry[language][key] = value;
+      });
+      return carry;
+    }, {});
+    schema += stringifyObject(structuredLocales, indent, level);
+    level--;
+    schema += indentString(`}`, indent, level);
   }
   if (presets.length) {
     schema += `,\n`;

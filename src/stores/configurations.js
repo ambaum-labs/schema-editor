@@ -25,22 +25,24 @@ export const useConfigurationStore = defineStore('configurations', {
     },
 
     loadConfiguration(selectedName) {
-      const { general, settings, blocks, presets, default: defaultSettings } = this.getConfiguration(selectedName);
+      const { general, settings, blocks, locales, presets, default: defaultSettings } = this.getConfiguration(selectedName);
       const schema = useSchemaStore();
-      schema.general = general;
-      schema.settings = settings;
-      schema.blocks = blocks;
-      schema.presets = presets;
-      schema.default = defaultSettings;
+      schema.general = general || {};
+      schema.settings = settings || [];
+      schema.blocks = blocks || [];
+      schema.locales = locales || {};
+      schema.presets = presets || [];
+      schema.default = defaultSettings || {};
     },
 
     saveConfiguration(name) {
-      const { general, settings, blocks, presets, default: defaults } = useSchemaStore();
+      const { general, settings, blocks, locales, presets, default: defaults } = useSchemaStore();
       this.configurations.push({
         name,
         general,
         settings,
         blocks,
+        locales,
         presets,
         default: defaults,
       });

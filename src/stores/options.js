@@ -18,6 +18,10 @@ function loadSaved() {
 
 export const useOptionsStore = defineStore('options', {
   state: () => ({
+    codeOptions: {
+      tabSize: 2,
+      indentFirstLine: false,
+    },
     ...loadSaved()
   }),
 });

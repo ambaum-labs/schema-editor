@@ -21,9 +21,15 @@ export default {
 </script>
 
 <template>
-  <SettingsManager
+  <div
     v-show="active"
-    :active="active"
-    :settings="settings"
-  />
+    class="flex flex-col"
+  >
+    <h2 class="text-lg font-semibold mb-3">Settings</h2>
+    <SettingsManager
+      v-show="active"
+      :active="active"
+      :settings="settings"
+    />
+  </div>
 </template>

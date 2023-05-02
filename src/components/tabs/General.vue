@@ -31,8 +31,9 @@ export default {
 <template>
   <div
     v-show="active"
-    class="pt-1"
+    class="flex flex-col"
   >
+    <h2 class="text-lg font-semibold mb-3">General</h2>
     <div class="flex items-center mb-3">
       <label
         for="name"

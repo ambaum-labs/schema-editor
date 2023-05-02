@@ -85,6 +85,7 @@ export default {
     v-show="active"
     class="flex flex-col"
   >
+    <h2 class="text-lg font-semibold mb-3">Blocks</h2>
     <div class="flex items-center mb-3">
       <label
         for="name"

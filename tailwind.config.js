@@ -15,7 +15,7 @@ module.exports = {
       yellow: colors.yellow,
       red: colors.red,
       'twilight': '#141055',
-      'nebula': '#003557',
+      'nebula': '#032544',
       'wine': '#2b0000',
     },
   },

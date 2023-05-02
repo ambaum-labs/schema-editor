@@ -121,6 +121,7 @@ export default {
     v-show="active"
     class="flex flex-col"
   >
+    <h2 class="text-lg font-semibold mb-3">Presets</h2>
     <div
       v-for="(preset, index) in presets"
       :key="preset.uuid"

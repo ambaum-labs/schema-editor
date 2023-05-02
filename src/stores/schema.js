@@ -1,4 +1,5 @@
 import { defineStore } from 'pinia';
+import { useOptionsStore } from '@/stores/options';
 import generateSchema from '@/schema';
 import { applyHiddenFields, createSetting } from '@/settings';
 
@@ -15,6 +16,7 @@ function defaultState() {
       createSetting(),
     ],
     blocks: [],
+    locales: {},
     presets: [],
     defaultPreset: {},
   };
@@ -27,12 +29,15 @@ export const useSchemaStore = defineStore('schema', {
 
   getters: {
     schema: (state) => {
+      const { codeOptions } = useOptionsStore();
       return generateSchema({
         ...state.general,
         settings: state.settings,
         blocks: state.blocks,
+        locales: state.locales,
         presets: state.presets,
         defaultPreset: state.defaultPreset,
+        codeOptions,
       });
     },
   },
@@ -41,7 +46,7 @@ export const useSchemaStore = defineStore('schema', {
     loadFromSchema(newSchema) {
       const jsonString = newSchema.replace(/\{%[^%]+%\}/g, '').trim();
       try {
-        const { name, tag, class: sectionClass, limit, max_blocks: maxBlocks, settings, blocks, presets, default: defaultPreset } = JSON.parse(jsonString);
+        const { name, tag, class: sectionClass, limit, max_blocks: maxBlocks, settings, blocks, locales, presets, default: defaultPreset } = JSON.parse(jsonString);
         const defaults = defaultState();
         this.general.name = name || defaults.general.name;
         this.general.tag = tag || defaults.general.tag;
@@ -53,7 +58,10 @@ export const useSchemaStore = defineStore('schema', {
         for (const block of this.blocks) {
           block.settings = block.settings?.map(setting => applyHiddenFields(setting));
         }
-        this.presets = (presets || defaults.presets).map(preset => applyHiddenFields(preset));
+        this.locales = applyHiddenFields(locales || defaults.locales);
+        this.presets = Object.from(
+          Object.entries(presets || defaults.presets).map(([language, translations]) => [language, applyHiddenFields(translations)])
+        );
         for (const preset of this.presets) {
           preset.blocks = preset.blocks?.map(block => applyHiddenFields(block));
         }

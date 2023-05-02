@@ -117,15 +117,13 @@ export default {
     v-show="active"
     class="flex flex-col"
   >
+    <h2 class="text-lg font-semibold mb-3">Default</h2>
+    <p class="px-4 mb-3">For static sections only, for dynamic sectons use presets.</p>
+    <p class="px-4 mb-3">If you have already defined presets, all settings here in Default will be omitted from your schema.  You can delete your Presets to use Default instead.</p>
     <div class="flex flex-col border-slate-700 border-2 mb-3">
-      <button class="p-2 bg-wine text-left">
-        Default Settings
-      </button>
-      <div class="flex flex-col pt-3">
-        <p class="px-4 mb-3">For static sections only, for dynamic sectons use presets.</p>
-        <p class="px-4 mb-3">If you have already defined presets, all settings here in Default will be omitted from your schema.  You can delete your Presets to use Default instead.</p>
-        <div class="flex flex-col pt-2 mb-3 border-t border-slate-800">
-          <h3 class="mb-3 px-4 bg-twilight">settings</h3>
+      <div class="flex flex-col">
+        <div class="flex flex-col mb-3 border-t border-slate-800">
+          <h3 class="mb-3 px-4 py-2 bg-twilight">settings</h3>
           <div
             v-for="([settingId, value]) in presetSettings(defaultPreset)"
             class="flex items-start px-6 mb-3"
@@ -163,12 +161,12 @@ export default {
             To add settings to the default preset you must first define them in the Settings tab
           </p>
         </div>
-        <div class="flex flex-col px-4 pt-2 mb-3 border-t border-slate-800">
-          <h3 class="mb-3">blocks</h3>
+        <div class="flex flex-col mb-3 border-t border-slate-800">
+          <h3 class="mb-3 px-4 py-2 bg-nebula">blocks</h3>
           <div
             v-for="(block, blockIndex) in defaultPreset.blocks"
             :key="block.uuid"
-            class="flex flex-col border-slate-700 border-2 mb-3"
+            class="flex flex-col border-slate-700 border-2 px-4 py-2 mb-3"
           >
             <button
               class="p-2 bg-nebula text-left"
@@ -228,7 +226,10 @@ export default {
               {{ type }}
             </option>
           </select>
-          <p v-else>To add blocks to the default preset you must first define them in the Blocks tab</p>
+          <p
+            v-else
+            class="px-4 py-2"
+          >To add blocks to the default preset you must first define them in the Blocks tab</p>
         </div>
       </div>
     </div>

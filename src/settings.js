@@ -188,7 +188,7 @@ export const settingTypes = [
 
 export function applyHiddenFields(item = {}) {
   hiddenFields.forEach(({ field, defaultValue }) => {
-    if (!item[field]) {
+    if (typeof item[field] === 'undefined') {
       item[field] = typeof defaultValue === 'function' ? defaultValue() : defaultValue;
     }
   });

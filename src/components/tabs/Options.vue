@@ -47,7 +47,7 @@ export default {
 
 <template>
   <div v-show="active">
-    <h3 class="text-lg font-semibold mb-3">Schema output options</h3>
+    <h2 class="text-lg font-semibold mb-3">Schema output options</h2>
     <div
       v-for="([key, value]) in codeOptionsArray"
       class="flex items-center mb-3"
