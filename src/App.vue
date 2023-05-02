@@ -67,9 +67,9 @@ export default {
   <header class="flex-0 px-5">
     <div class="flex flex-col md:flex-row items-center justify-between py-3">
       <div class="flex items-center mb-5 md:mb-0">
-        <div class="pr-5 border-r-2 border-yellow-400">
+        <a href="https://shopify.dev/docs/themes/architecture/sections/section-schema" target="_blank" class="pr-5 border-r-2 border-yellow-400">
           <ShopifyLogo height="40" width="140" />
-        </div>
+        </a>
         <h1 class="mt-1 ml-5 text-3xl font-semibold">Section Schema Editor</h1>
       </div>
       <a href="https://ambaum.com" target="_blank" class="text-xs text-center">
