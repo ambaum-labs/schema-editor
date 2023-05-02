@@ -2,6 +2,7 @@
 import { settingTypes, hiddenFields, createSetting, updateTypedFields } from '@/settings';
 import ChevronDown from '@/components/icons/ChevronDown.vue';
 import ChevronUp from '@/components/icons/ChevronUp.vue';
+import Trash from '@/components/icons/Trash.vue';
 
 export default {
   props: {
@@ -13,6 +14,7 @@ export default {
   components: {
     ChevronDown,
     ChevronUp,
+    Trash
   },
 
   watch: {
@@ -115,6 +117,10 @@ export default {
       this.resizeTextarea(currentTarget);
       this.changeSetting(index, key, currentTarget.value);
     },
+
+    deleteSetting(index) {
+      this.settings.splice(index, 1);
+    },
   },
 };
 </script>
@@ -133,8 +139,16 @@ export default {
         @click="changeSetting(index, 'expanded', !setting.expanded)"
       >
         <span>{{ displayName(setting) }}</span>
-        <ChevronDown v-show="setting.expanded" />
-        <ChevronUp v-show="!setting.expanded" />
+        <div class="flex items-center">
+          <button
+            class="text-red-300 p-1 mr-3"
+            @click.stop="deleteSetting(index)"
+          >
+            <Trash />
+          </button>
+          <ChevronDown v-show="setting.expanded" />
+          <ChevronUp v-show="!setting.expanded" />
+        </div>
       </button>
       <div
         v-show="setting.expanded"

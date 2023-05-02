@@ -7,6 +7,7 @@ import ChevronDoubleDown from '@/components/icons/ChevronDoubleDown.vue';
 import ChevronDoubleUp from '@/components/icons/ChevronDoubleUp.vue';
 import ChevronDown from '@/components/icons/ChevronDown.vue';
 import ChevronUp from '@/components/icons/ChevronUp.vue';
+import Trash from '@/components/icons/Trash.vue';
 
 export default {
   props: {
@@ -18,6 +19,7 @@ export default {
     ChevronDoubleUp,
     ChevronDown,
     ChevronUp,
+    Trash,
   },
 
   watch: {
@@ -119,9 +121,9 @@ export default {
       this.presets[index].settings[key] = currentTarget.value.trim();
     },
 
-    blockTextAreaUpdate({ curretnTarget }, presetIndex, blockIndex, key) {
+    blockTextAreaUpdate({ currentTarget }, presetIndex, blockIndex, key) {
       this.resizeTextarea(currentTarget);
-      this.presets[presetIndex][blockIndex][key] = currentTarget.value;
+      this.presets[presetIndex].blocks[blockIndex].settings[key] = currentTarget.value;
     },
 
     togglePresets(expanded) {
@@ -133,6 +135,14 @@ export default {
 
     toggleBlocks(blocks, expanded) {
       blocks?.forEach(block => block.expanded = expanded);
+    },
+
+    deletePreset(index) {
+      this.presets.splice(index, 1);
+    },
+
+    deleteBlock(presetIndex, blockIndex) {
+      this.presets[presetIndex].blocks.splice(blockIndex, 1);
     },
   },
 };
@@ -176,8 +186,16 @@ export default {
         @click="presets[index].expanded = !preset.expanded"
       >
         <span>{{ preset.name || 'New Preset' }}</span>
-        <ChevronDown v-show="preset.expanded" />
-        <ChevronUp v-show="!preset.expanded" />
+        <span class="flex items-center">
+          <button
+            class="text-red-300 p-1 mr-3"
+            @click.stop="deletePreset(index)"
+          >
+            <Trash />
+          </button>
+          <ChevronDown v-show="preset.expanded" />
+          <ChevronUp v-show="!preset.expanded" />
+        </span>
       </button>
       <div
         v-show="preset.expanded"
@@ -268,8 +286,16 @@ export default {
               @click="block.expanded = !block.expanded"
             >
               <span>{{ displayType(block.type) }}</span>
-              <ChevronDown v-show="block.expanded" />
-              <ChevronUp v-show="!block.expanded" />
+              <span class="flex items-center">
+                <button
+                  class="text-red-300 p-1 mr-3"
+                  @click.stop="deleteBlock(index, blockIndex)"
+                >
+                  <Trash />
+                </button>
+                <ChevronDown v-show="block.expanded" />
+                <ChevronUp v-show="!block.expanded" />
+              </span>
             </button>
             <div
               v-show="block.expanded"
@@ -290,7 +316,7 @@ export default {
                   :readonly="key === 'type'"
                   rows="1"
                   class="flex-1 min-w-0 bg-slate-700 py-1 px-3 leading-snug resize-none"
-                  @input="(e) => textareaUpdate(e, index, blockIndex, key)"
+                  @input="(e) => blockTextAreaUpdate(e, index, blockIndex, key)"
                 >{{ value }}</textarea>
               </div>
               <select

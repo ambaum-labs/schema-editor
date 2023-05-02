@@ -7,6 +7,7 @@ import ChevronDoubleDown from '@/components/icons/ChevronDoubleDown.vue';
 import ChevronDoubleUp from '@/components/icons/ChevronDoubleUp.vue';
 import ChevronDown from '@/components/icons/ChevronDown.vue';
 import ChevronUp from '@/components/icons/ChevronUp.vue';
+import Trash from '@/components/icons/Trash.vue';
 
 export default {
   props: {
@@ -18,6 +19,7 @@ export default {
     ChevronDoubleUp,
     ChevronDown,
     ChevronUp,
+    Trash,
   },
 
   watch: {
@@ -92,6 +94,10 @@ export default {
         this.locales[language].expanded = expanded;
       }
     },
+
+    deleteLocale(language) {
+      delete this.locales[language];
+    },
   },
 };
 </script>
@@ -134,8 +140,16 @@ export default {
         @click="locales[language].expanded = !expanded"
       >
         <span>{{ displayName(language) }}</span>
-        <ChevronDown v-show="expanded" />
-        <ChevronUp v-show="!expanded" />
+        <span class="flex items-center">
+          <button
+            class="text-red-300 p-1 mr-3"
+            @click.stop="deleteLocale(language)"
+          >
+            <Trash />
+          </button>
+          <ChevronDown v-show="expanded" />
+          <ChevronUp v-show="!expanded" />
+        </span>
       </button>
       <div
         v-show="expanded"

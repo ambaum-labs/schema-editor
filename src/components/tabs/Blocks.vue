@@ -7,6 +7,7 @@ import ChevronDoubleDown from '@/components/icons/ChevronDoubleDown.vue';
 import ChevronDoubleUp from '@/components/icons/ChevronDoubleUp.vue';
 import ChevronDown from '@/components/icons/ChevronDown.vue';
 import ChevronUp from '@/components/icons/ChevronUp.vue';
+import Trash from '@/components/icons/Trash.vue';
 
 export default {
   props: {
@@ -19,6 +20,7 @@ export default {
     ChevronDoubleUp,
     ChevronDown,
     ChevronUp,
+    Trash,
   },
 
   computed: {
@@ -95,7 +97,11 @@ export default {
     toggleSettings(settings, expanded) {
       settings?.forEach(setting => setting.expanded = expanded);
     },
-  }
+
+    deleteBlock(index) {
+      this.blocks.splice(index, 1);
+    },
+  },
 };
 </script>
 
@@ -167,8 +173,16 @@ export default {
         @click="blocks[index].expanded = !block.expanded"
       >
         <span>{{ displayName(block) }}</span>
-        <ChevronDown v-show="block.expanded" />
-        <ChevronUp v-show="!block.expanded" />
+        <span class="flex items-center">
+          <button
+            class="text-red-300 p-1 mr-3"
+            @click.stop="deleteBlock(index)"
+          >
+            <Trash />
+          </button>
+          <ChevronDown v-show="block.expanded" />
+          <ChevronUp v-show="!block.expanded" />
+        </span>
       </button>
       <div
         v-show="block.expanded"
