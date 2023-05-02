@@ -3,10 +3,21 @@ import { mapWritableState } from 'pinia';
 import { useSchemaStore } from '@/stores/schema';
 import { applyHiddenFields } from '@/settings';
 import { languages } from '@/locales';
+import ChevronDoubleDown from '@/components/icons/ChevronDoubleDown.vue';
+import ChevronDoubleUp from '@/components/icons/ChevronDoubleUp.vue';
+import ChevronDown from '@/components/icons/ChevronDown.vue';
+import ChevronUp from '@/components/icons/ChevronUp.vue';
 
 export default {
   props: {
     active: { type: Boolean, default: false },
+  },
+
+  components: {
+    ChevronDoubleDown,
+    ChevronDoubleUp,
+    ChevronDown,
+    ChevronUp,
   },
 
   watch: {
@@ -75,6 +86,12 @@ export default {
       this.resizeTextarea(currentTarget);
       this.locales[language].translations[index].value = currentTarget.value.trim();
     },
+
+    toggleLocales(expanded) {
+      for (const language of Object.keys(this.locales)) {
+        this.locales[language].expanded = expanded;
+      }
+    },
   },
 };
 </script>
@@ -84,17 +101,41 @@ export default {
     v-show="active"
     class="flex flex-col"
   >
-    <h2 class="text-lg font-semibold mb-3">Locales</h2>
+    <h2 class="flex justify-between items-center text-lg font-semibold mb-3">
+      <span>Locales</span>
+      <span
+        v-show="availableLocales.length"
+        class="flex"
+      >
+        <button
+          aria-label="Collapse all"
+          title="Collapse all"
+          class="mr-2"
+          @click="toggleLocales(false)"
+        >
+          <ChevronDoubleUp />
+        </button>
+        <button
+          aria-label="Expand all"
+          title="Expand all"
+          @click="toggleLocales(true)"
+        >
+          <ChevronDoubleDown />
+        </button>
+      </span>
+    </h2>
     <div
       v-for="([language, { expanded, translations }]) in availableLocales"
       :key="language"
       class="flex flex-col border-slate-700 border-2 mb-3"
     >
       <button
-        class="p-2 bg-twilight text-left"
+        class="flex justify-between items-center p-2 bg-twilight text-left"
         @click="locales[language].expanded = !expanded"
       >
-        {{ displayName(language) }}
+        <span>{{ displayName(language) }}</span>
+        <ChevronDown v-show="expanded" />
+        <ChevronUp v-show="!expanded" />
       </button>
       <div
         v-show="expanded"

@@ -3,6 +3,10 @@ import { mapWritableState } from 'pinia';
 import { useSchemaStore } from '@/stores/schema';
 import { hiddenFields, requiredFields, optionalFields, createBlock, createAppBlock } from '@/blocks';
 import SettingsManager from '@/components/SettingsManager.vue';
+import ChevronDoubleDown from '@/components/icons/ChevronDoubleDown.vue';
+import ChevronDoubleUp from '@/components/icons/ChevronDoubleUp.vue';
+import ChevronDown from '@/components/icons/ChevronDown.vue';
+import ChevronUp from '@/components/icons/ChevronUp.vue';
 
 export default {
   props: {
@@ -11,6 +15,10 @@ export default {
 
   components: {
     SettingsManager,
+    ChevronDoubleDown,
+    ChevronDoubleUp,
+    ChevronDown,
+    ChevronUp,
   },
 
   computed: {
@@ -76,6 +84,17 @@ export default {
       }
       this.blocks[index] = newSetting;
     },
+
+    toggleBlocks(expanded) {
+      this.blocks?.forEach((block) => {
+        block.expanded = expanded;
+        this.toggleSettings(block.settings, expanded);
+      });
+    },
+
+    toggleSettings(settings, expanded) {
+      settings?.forEach(setting => setting.expanded = expanded);
+    },
   }
 };
 </script>
@@ -85,7 +104,29 @@ export default {
     v-show="active"
     class="flex flex-col"
   >
-    <h2 class="text-lg font-semibold mb-3">Blocks</h2>
+    <h2 class="flex justify-between items-center text-lg font-semibold mb-3">
+      <span>Blocks</span>
+      <span
+        v-show="blocks.length"
+        class="flex"
+      >
+        <button
+          aria-label="Collapse all"
+          title="Collapse all"
+          class="mr-2"
+          @click="toggleBlocks(false)"
+        >
+          <ChevronDoubleUp />
+        </button>
+        <button
+          aria-label="Expand all"
+          title="Expand all"
+          @click="toggleBlocks(true)"
+        >
+          <ChevronDoubleDown />
+        </button>
+      </span>
+    </h2>
     <div class="flex items-center mb-3">
       <label
         for="name"
@@ -122,10 +163,12 @@ export default {
       class="flex flex-col border-slate-700 border-2 mb-3"
     >
       <button
-        class="p-2 bg-nebula text-left"
+        class="flex justify-between items-center p-2 bg-nebula text-left"
         @click="blocks[index].expanded = !block.expanded"
       >
-        {{ displayName(block) }}
+        <span>{{ displayName(block) }}</span>
+        <ChevronDown v-show="block.expanded" />
+        <ChevronUp v-show="!block.expanded" />
       </button>
       <div
         v-show="block.expanded"
@@ -167,7 +210,29 @@ export default {
           v-if="block.settings"
           class="flex flex-col px-4 pt-2 mb-3 border-t border-slate-800"
         >
-          <h3 class="mb-3">settings</h3>
+          <h3 class="flex justify-between items-center mb-3">
+            <span>settings</span>
+            <span
+              v-if="block.settings.length"
+              class="flex"
+            >
+              <button
+                aria-label="Collapse all"
+                title="Collapse all"
+                class="mr-2"
+                @click="toggleSettings(block.settings, false)"
+              >
+                <ChevronDoubleUp />
+              </button>
+              <button
+                aria-label="Expand all"
+                title="Expand all"
+                @click="toggleSettings(block.settings, true)"
+              >
+                <ChevronDoubleDown />
+              </button>
+            </span>
+          </h3>
           <SettingsManager
             :active="active"
             :settings="block.settings"

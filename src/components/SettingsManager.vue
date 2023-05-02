@@ -1,11 +1,18 @@
 <script>
 import { settingTypes, hiddenFields, createSetting, updateTypedFields } from '@/settings';
+import ChevronDown from '@/components/icons/ChevronDown.vue';
+import ChevronUp from '@/components/icons/ChevronUp.vue';
 
 export default {
   props: {
     active: { type: Boolean, default: true },
     settings: { type: Array, default: () => ([]) },
     compact: { type: Boolean, default: false },
+  },
+
+  components: {
+    ChevronDown,
+    ChevronUp,
   },
 
   watch: {
@@ -122,10 +129,12 @@ export default {
     >
       <button
         :class="headerClasses"
-        class="px-2 bg-twilight text-left"
+        class="flex justify-between items-center px-2 bg-twilight text-left"
         @click="changeSetting(index, 'expanded', !setting.expanded)"
       >
-        {{ displayName(setting) }}
+        <span>{{ displayName(setting) }}</span>
+        <ChevronDown v-show="setting.expanded" />
+        <ChevronUp v-show="!setting.expanded" />
       </button>
       <div
         v-show="setting.expanded"

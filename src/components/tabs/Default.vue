@@ -3,10 +3,21 @@ import { mapWritableState } from 'pinia';
 import { useSchemaStore } from '@/stores/schema';
 import { optionalFields, createPresetSetting, createPresetBlock } from '@/presets';
 import { hiddenFields } from '@/settings';
+import ChevronDoubleDown from '@/components/icons/ChevronDoubleDown.vue';
+import ChevronDoubleUp from '@/components/icons/ChevronDoubleUp.vue';
+import ChevronDown from '@/components/icons/ChevronDown.vue';
+import ChevronUp from '@/components/icons/ChevronUp.vue';
 
 export default {
   props: {
     active: { type: Boolean, default: false },
+  },
+
+  components: {
+    ChevronDoubleDown,
+    ChevronDoubleUp,
+    ChevronDown,
+    ChevronUp,
   },
 
   watch: {
@@ -108,6 +119,10 @@ export default {
       this.resizeTextarea(currentTarget);
       this.defaultPreset.blocks[blockIndex].settings[key] = currentTarget.value;
     },
+
+    toggleBlocks(expanded) {
+      this.defaultPreset.blocks.forEach(block => block.expanded = expanded);
+    },
   },
 };
 </script>
@@ -161,27 +176,51 @@ export default {
             To add settings to the default preset you must first define them in the Settings tab
           </p>
         </div>
-        <div class="flex flex-col mb-3 border-t border-slate-800">
-          <h3 class="mb-3 px-4 py-2 bg-nebula">blocks</h3>
+        <div class="flex flex-col px-4 pt-2 mb-3 border-t border-slate-800">
+          <h3 class="flex justify-between items-center mb-3">
+            <span>blocks</span>
+            <span
+              v-show="defaultPreset.blocks && defaultPreset.blocks.length"
+              class="flex"
+            >
+              <button
+                aria-label="Collapse all"
+                title="Collapse all"
+                class="mr-2"
+                @click="toggleBlocks(false)"
+              >
+                <ChevronDoubleUp />
+              </button>
+              <button
+                aria-label="Expand all"
+                title="Expand all"
+                @click="toggleBlocks(true)"
+              >
+                <ChevronDoubleDown />
+              </button>
+            </span>
+          </h3>
           <div
             v-for="(block, blockIndex) in defaultPreset.blocks"
             :key="block.uuid"
-            class="flex flex-col border-slate-700 border-2 px-4 py-2 mb-3"
+            class="flex flex-col border-slate-700 border-2 mb-3"
           >
             <button
-              class="p-2 bg-nebula text-left"
+              class="flex justify-between items-center p-2 bg-nebula text-left"
               @click="block.expanded = !block.expanded"
             >
-              {{ displayType(block.type) }}
+              <span>{{ displayType(block.type) }}</span>
+              <ChevronDown v-show="block.expanded" />
+              <ChevronUp v-show="!block.expanded" />
             </button>
             <div
               v-show="block.expanded"
-              class="flex flex-col pt-3"
+              class="flex flex-col px-4 pt-3"
             >
               <div
                 v-for="([key, value]) in blockFields(block)"
                 :key="key"
-                class="flex items-start px-4 mb-3"
+                class="flex items-start mb-3"
               >
                 <label
                   :for="`${key}-${block.uuid}`"
@@ -196,21 +235,21 @@ export default {
                   @input="(e) => blockTextAreaUpdate(e, blockIndex, key)"
                 >{{ value }}</textarea>
               </div>
-            </div>
-            <select
-              v-if="unusedBlockSettings(block).length"
-              class="flex-1 bg-slate-700 py-1.5 px-3 mx-4 mb-3 leading-snug"
-              @change="(e) => addBlockSetting(blockIndex, e.currentTarget)"
-            >
-              <option value="">Add Setting</option>
-              <option
-                v-for="id in unusedBlockSettings(block)"
-                :value="id"
-                :key="id"
+              <select
+                v-if="unusedBlockSettings(block).length"
+                class="flex-1 bg-slate-700 py-1.5 px-3 mb-3 leading-snug"
+                @change="(e) => addBlockSetting(blockIndex, e.currentTarget)"
               >
-                {{ id }}
-              </option>
-            </select>
+                <option value="">Add Setting</option>
+                <option
+                  v-for="id in unusedBlockSettings(block)"
+                  :value="id"
+                  :key="id"
+                >
+                  {{ id }}
+                </option>
+              </select>
+            </div>
           </div>
           <select
             v-if="validBlocks.length"

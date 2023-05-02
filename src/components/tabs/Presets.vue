@@ -3,10 +3,21 @@ import { mapWritableState } from 'pinia';
 import { useSchemaStore } from '@/stores/schema';
 import { optionalFields, createPreset, createPresetBlock } from '@/presets';
 import { hiddenFields } from '@/settings';
+import ChevronDoubleDown from '@/components/icons/ChevronDoubleDown.vue';
+import ChevronDoubleUp from '@/components/icons/ChevronDoubleUp.vue';
+import ChevronDown from '@/components/icons/ChevronDown.vue';
+import ChevronUp from '@/components/icons/ChevronUp.vue';
 
 export default {
   props: {
     active: { type: Boolean, default: false },
+  },
+
+  components: {
+    ChevronDoubleDown,
+    ChevronDoubleUp,
+    ChevronDown,
+    ChevronUp,
   },
 
   watch: {
@@ -112,6 +123,17 @@ export default {
       this.resizeTextarea(currentTarget);
       this.presets[presetIndex][blockIndex][key] = currentTarget.value;
     },
+
+    togglePresets(expanded) {
+      this.presets?.forEach((preset) => {
+        preset.expanded = expanded;
+        this.toggleBlocks(preset.blocks, expanded);
+      });
+    },
+
+    toggleBlocks(blocks, expanded) {
+      blocks?.forEach(block => block.expanded = expanded);
+    },
   },
 };
 </script>
@@ -121,17 +143,41 @@ export default {
     v-show="active"
     class="flex flex-col"
   >
-    <h2 class="text-lg font-semibold mb-3">Presets</h2>
+    <h2 class="flex justify-between items-center text-lg font-semibold mb-3">
+      <span>Presets</span>
+      <span
+        v-show="presets.length"
+        class="flex"
+      >
+        <button
+          aria-label="Collapse all"
+          title="Collapse all"
+          class="mr-2"
+          @click="togglePresets(false)"
+        >
+          <ChevronDoubleUp />
+        </button>
+        <button
+          aria-label="Expand all"
+          title="Expand all"
+          @click="togglePresets(true)"
+        >
+          <ChevronDoubleDown />
+        </button>
+      </span>
+    </h2>
     <div
       v-for="(preset, index) in presets"
       :key="preset.uuid"
       class="flex flex-col border-slate-700 border-2 mb-3"
     >
       <button
-        class="p-2 bg-wine text-left"
+        class="flex justify-between items-center p-2 bg-wine text-left"
         @click="presets[index].expanded = !preset.expanded"
       >
-        {{ preset.name || 'New Preset' }}
+        <span>{{ preset.name || 'New Preset' }}</span>
+        <ChevronDown v-show="preset.expanded" />
+        <ChevronUp v-show="!preset.expanded" />
       </button>
       <div
         v-show="preset.expanded"
@@ -149,8 +195,8 @@ export default {
             @input="({ currentTarget }) => presets[index].name = currentTarget.value.trim()"
           >
         </div>
-        <div class="flex flex-col pt-2 mb-3 border-t border-slate-800">
-          <h3 class="mb-3 px-4 bg-twilight">settings</h3>
+        <div class="flex flex-col mb-3 border-t border-slate-800">
+          <h3 class="mb-3 px-4 py-2 bg-twilight">settings</h3>
           <div
             v-for="([settingId, value]) in presetSettings(preset)"
             class="flex items-start px-6 mb-3"
@@ -189,17 +235,41 @@ export default {
           </p>
         </div>
         <div class="flex flex-col px-4 pt-2 mb-3 border-t border-slate-800">
-          <h3 class="mb-3">blocks</h3>
+          <h3 class="flex justify-between items-center py-1 mb-3">
+            <span>blocks</span>
+            <span
+              v-show="preset.blocks && preset.blocks.length"
+              class="flex"
+            >
+              <button
+                aria-label="Collapse all"
+                title="Collapse all"
+                class="mr-2"
+                @click="toggleBlocks(preset.blocks, false)"
+              >
+                <ChevronDoubleUp />
+              </button>
+              <button
+                aria-label="Expand all"
+                title="Expand all"
+                @click="toggleBlocks(preset.blocks, true)"
+              >
+                <ChevronDoubleDown />
+              </button>
+            </span>
+          </h3>
           <div
             v-for="(block, blockIndex) in preset.blocks"
             :key="block.uuid"
             class="flex flex-col border-slate-700 border-2 mb-3"
           >
             <button
-              class="p-2 bg-nebula text-left"
+              class="flex justify-between items-center p-2 bg-nebula text-left"
               @click="block.expanded = !block.expanded"
             >
-              {{ displayType(block.type) }}
+              <span>{{ displayType(block.type) }}</span>
+              <ChevronDown v-show="block.expanded" />
+              <ChevronUp v-show="!block.expanded" />
             </button>
             <div
               v-show="block.expanded"
@@ -223,21 +293,21 @@ export default {
                   @input="(e) => textareaUpdate(e, index, blockIndex, key)"
                 >{{ value }}</textarea>
               </div>
-            </div>
-            <select
-              v-if="unusedBlockSettings(block).length"
-              class="flex-1 bg-slate-700 py-1.5 px-3 mx-4 mb-3 leading-snug"
-              @change="(e) => addBlockSetting(index, blockIndex, e.currentTarget)"
-            >
-              <option value="">Add Setting</option>
-              <option
-                v-for="id in unusedBlockSettings(block)"
-                :value="id"
-                :key="id"
+              <select
+                v-if="unusedBlockSettings(block).length"
+                class="flex-1 bg-slate-700 py-1.5 px-3 mx-4 mb-3 leading-snug"
+                @change="(e) => addBlockSetting(index, blockIndex, e.currentTarget)"
               >
-                {{ id }}
-              </option>
-            </select>
+                <option value="">Add Setting</option>
+                <option
+                  v-for="id in unusedBlockSettings(block)"
+                  :value="id"
+                  :key="id"
+                >
+                  {{ id }}
+                </option>
+              </select>
+            </div>
           </div>
           <select
             v-if="validBlocks.length"
