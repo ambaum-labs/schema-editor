@@ -109,7 +109,7 @@ export default {
         </li>
       </ul>
     </div>
-    <a href="https://github.com/ambaum-labs/schema-editor" target="_blank" class="flex items-center w-5 h-5">
+    <a href="https://github.com/ambaum-labs/schema-editor" target="_blank" class="flex items-center w-5 h-5 ml-2">
       <Github class="max-w-full h-auto" />
     </a>
   </footer>
