@@ -3,6 +3,20 @@ import { useOptionsStore } from '@/stores/options';
 import generateSchema from '@/schema';
 import { applyHiddenFields, createSetting } from '@/settings';
 
+/**
+ * URL may contain a base64 encoded JSON payload containing
+ * a schema definition.  If one exists and is valid, we use
+ * that for initial population
+ */
+function getSchemaFromUrl() {
+  const urlPayload = window.location.pathname.split('/').pop();
+  try {
+    return JSON.parse(atob(urlPayload));
+  } catch (err) {
+    return undefined;
+  }
+}
+
 function defaultState() {
   return {
     general: {
@@ -24,7 +38,7 @@ function defaultState() {
 
 export const useSchemaStore = defineStore('schema', {
   state: () => ({
-    ...defaultState(),
+    ...(getSchemaFromUrl() ?? defaultState()),
   }),
 
   getters: {
@@ -71,6 +85,19 @@ export const useSchemaStore = defineStore('schema', {
         console.log(err);
         console.error('Schema parsing failed');
       }
+    },
+
+    getShareLink() {
+      const { protocol, host } = window.location;
+      const data = {
+        general: this.general,
+        settings: this.settings,
+        blocks: this.blocks,
+        locales: this.locales,
+        presets: this.presets,
+        defaultPreset: this.defaultPreset,
+      };
+      return `${protocol}//${host}/${btoa(JSON.stringify(data))}`;
     },
   },
 });
