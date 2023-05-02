@@ -14,6 +14,7 @@ module.exports = {
       slate: colors.slate,
       yellow: colors.yellow,
       red: colors.red,
+      green: colors.green,
       'twilight': '#141055',
       'nebula': '#032544',
       'wine': '#2b0000',

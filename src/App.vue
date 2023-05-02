@@ -1,6 +1,7 @@
 <script>
 import AmbaumLogo from '@/components/icons/AmbaumLogo.vue';
 import ShopifyLogo from '@/components/icons/ShopifyLogo.vue';
+import Github from '@/components/icons/Github.vue';
 import TabbedContent from '@/components/TabbedContent.vue';
 import Settings from '@/components/tabs/Settings.vue';
 import Locales from '@/components/tabs/Locales.vue';
@@ -26,6 +27,7 @@ export default {
     Code,
     Saved,
     Options,
+    Github,
   },
 
   data() {
@@ -77,7 +79,7 @@ export default {
     </div>
   </header>
 
-  <main class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-10 xl:gap-5 flex-1 p-5 xl:max-h-[calc(100vh-65px)]">
+  <main class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-10 xl:gap-5 flex-1 px-5 pt-5 pb-4 xl:max-h-[calc(100vh-105px)]">
     <TabbedContent
       v-for="(card, index) in cards"
       v-bind="card"
@@ -85,7 +87,30 @@ export default {
         'md:col-span-2': index === cards.length - 1,
         'xl:col-span-1': index === cards.length - 1,
       }"
-      class="xl:max-h-[calc(100vh-105px)]"
+      class="xl:max-h-[calc(100vh-130px)]"
     />
   </main>
+
+  <footer class="flex items-center text-sm px-5 pb-5 xl:pb-0 justify-center xl:justify-between">
+    <div class="flex items-center">
+      <span>Lovingly crafted with:</span>
+      <ul class="flex items-center pl-2">
+        <li class="px-2">
+          <a class="text-green-300 underline" href="https://vuejs.org/" target="_blank">Vue</a>
+        </li>
+        <li class="px-2">
+          <a class="text-green-300 underline" href="https://pinia.vuejs.org/" target="_blank">Pinia</a>
+        </li>
+        <li class="px-2">
+          <a class="text-green-300 underline" href="https://tailwindcss.com/" target="_blank">Tailwind</a>
+        </li>
+        <li class="px-2">
+          <a class="text-green-300 underline" href="https://heroicons.com/" target="_blank">Heroicons</a>
+        </li>
+      </ul>
+    </div>
+    <a href="https://github.com/ambaum-labs/schema-editor" target="_blank" class="flex items-center w-5 h-5">
+      <Github class="max-w-full h-auto" />
+    </a>
+  </footer>
 </template>
