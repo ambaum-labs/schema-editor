@@ -1100,6 +1100,11 @@ video {
     gap: 1.25rem;
   }
 
+  .xl\:py-1 {
+    padding-top: 0.25rem;
+    padding-bottom: 0.25rem;
+  }
+
   .xl\:pb-0 {
     padding-bottom: 0px;
   }

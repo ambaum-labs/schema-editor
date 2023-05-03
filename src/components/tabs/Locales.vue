@@ -192,7 +192,7 @@ export default {
               ref="textareas"
               :id="language + '-' + key + '-value'"
               rows="1"
-              class="flex-1 bg-slate-700 py-1 px-3 leading-snug resize-none"
+              class="flex-1 min-w-0 bg-slate-700 py-1 px-3 leading-snug resize-none"
               @input="(e) => textareaUpdate(e, language, index)"
             >{{ value }}</textarea>
             <button

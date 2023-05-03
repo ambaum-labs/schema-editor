@@ -91,9 +91,9 @@ export default {
     />
   </main>
 
-  <footer class="flex items-center text-sm px-5 pb-5 xl:pb-0 justify-center xl:justify-between">
-    <div class="flex items-center">
-      <span>Lovingly crafted with:</span>
+  <footer class="flex flex-col md:flex-row items-center text-sm px-5 pb-5 xl:py-1 justify-center xl:justify-between">
+    <div class="flex flex-col md:flex-row items-center mb-5 md:mb-0">
+      <span class="mb-3 md:mb-0">Lovingly crafted with:</span>
       <ul class="flex items-center pl-2">
         <li class="px-2">
           <a class="text-green-300 underline" href="https://vuejs.org/" target="_blank">Vue</a>
