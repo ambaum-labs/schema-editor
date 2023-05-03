@@ -2,6 +2,7 @@
 import { settingTypes, hiddenFields, createSetting, updateTypedFields } from '@/settings';
 import ChevronDown from '@/components/icons/ChevronDown.vue';
 import ChevronUp from '@/components/icons/ChevronUp.vue';
+import DocumentDuplicate from '@/components/icons/DocumentDuplicate.vue';
 import TrashCan from '@/components/icons/TrashCan.vue';
 import XMark from '@/components/icons/XMark.vue';
 
@@ -15,6 +16,7 @@ export default {
   components: {
     ChevronDown,
     ChevronUp,
+    DocumentDuplicate,
     TrashCan,
     XMark,
   },
@@ -98,6 +100,10 @@ export default {
       this.$emit('add', createSetting());
     },
 
+    duplicateSetting(setting, index) {
+      this.$emit('duplicate', index, JSON.parse(JSON.stringify(setting)));
+    },
+
     changeSetting(index, key, value) {
       let newSetting = { expanded: true, ...this.settings[index], [key]: value };
       if (key === 'type') {
@@ -154,7 +160,17 @@ export default {
         <span>{{ displayName(setting) }}</span>
         <div class="flex items-center">
           <button
+            class="p-1 mr-1"
+            aria-label="Duplicate setting"
+            title="Duplicate setting"
+            @click.stop="duplicateSetting(setting, index + 1)"
+          >
+            <DocumentDuplicate />
+          </button>
+          <button
             class="text-red-300 p-1 mr-3"
+            aria-label="Delete setting"
+            title="Delete setting"
             @click.stop="deleteSetting(index)"
           >
             <TrashCan />
@@ -223,6 +239,8 @@ export default {
           <button
             v-if="!isRequired(index, key)"
             class="text-red-300 p-1"
+            aria-label="Delete field"
+            title="Delete field"
             @click.stop="deleteSettingKey(index, key)"
           >
             <XMark />

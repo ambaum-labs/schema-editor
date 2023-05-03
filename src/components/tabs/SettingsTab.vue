@@ -63,6 +63,7 @@ export default {
       :active="active"
       :settings="settings"
       @add="(newSetting) => settings.push(newSetting)"
+      @duplicate="(index, copy) => settings.splice(index, 0, copy)"
       @set="(index, newSetting) => settings[index] = newSetting"
       @unset="(index, key) => delete settings[index][key]"
       @delete="(index) => settings.splice(index, 1)"

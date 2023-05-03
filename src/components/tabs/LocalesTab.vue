@@ -149,6 +149,8 @@ export default {
         <span class="flex items-center">
           <button
             class="text-red-300 p-1 mr-3"
+            aria-label="Delete locale"
+            title="Delete locale"
             @click.stop="deleteLocale(language)"
           >
             <TrashCan />
@@ -198,6 +200,8 @@ export default {
             />
             <button
               class="text-red-300 p-1"
+              aria-label="Delete translation"
+              title="Delete translation"
               @click.stop="deleteTranslation(language, index)"
             >
               <XMark />

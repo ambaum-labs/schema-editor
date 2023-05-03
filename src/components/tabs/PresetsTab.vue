@@ -7,6 +7,7 @@ import ChevronDoubleDown from '@/components/icons/ChevronDoubleDown.vue';
 import ChevronDoubleUp from '@/components/icons/ChevronDoubleUp.vue';
 import ChevronDown from '@/components/icons/ChevronDown.vue';
 import ChevronUp from '@/components/icons/ChevronUp.vue';
+import DocumentDuplicate from '@/components/icons/DocumentDuplicate.vue';
 import TrashCan from '@/components/icons/TrashCan.vue';
 import XMark from '@/components/icons/XMark.vue';
 
@@ -20,6 +21,7 @@ export default {
     ChevronDoubleUp,
     ChevronDown,
     ChevronUp,
+    DocumentDuplicate,
     TrashCan,
     XMark,
   },
@@ -101,6 +103,10 @@ export default {
       input.value = '';
     },
 
+    duplicatePreset(preset, index) {
+      this.presets.splice(index, 0, JSON.parse(JSON.stringify(preset)));
+    },
+
     addBlock({ currentTarget }, index) {
       this.presets[index].blocks = this.presets[index]?.blocks ?? [];
       this.presets[index].blocks.push(createPresetBlock(currentTarget.value));
@@ -111,6 +117,10 @@ export default {
       this.presets[presetIndex].blocks[blockIndex].settings = this.presets[presetIndex].blocks[blockIndex].settings ?? {};
       this.presets[presetIndex].blocks[blockIndex].settings[input.value] = '';
       input.value = '';
+    },
+
+    duplicateBlock(block, presetIndex, blockIndex) {
+      this.presets[presetIndex].blocks.splice(blockIndex, 0, JSON.parse(JSON.stringify(block)));
     },
 
     resizeTextarea(textarea) {
@@ -198,7 +208,17 @@ export default {
         <span>{{ preset.name || 'New Preset' }}</span>
         <span class="flex items-center">
           <button
+            class="p-1 mr-1"
+            aria-label="Duplicate block"
+            title="Duplicate block"
+            @click.stop="duplicatePreset(preset, index + 1)"
+          >
+            <DocumentDuplicate />
+          </button>
+          <button
             class="text-red-300 p-1 mr-3"
+            aria-label="Delete preset"
+            title="Delete preset"
             @click.stop="deletePreset(index)"
           >
             <TrashCan />
@@ -244,6 +264,8 @@ export default {
             />
             <button
               class="text-red-300 p-1"
+              aria-label="Delete setting"
+              title="Delete setting"
               @click.stop="deleteSetting(index, settingId)"
             >
               <XMark />
@@ -306,7 +328,17 @@ export default {
               <span>{{ displayType(block.type) }}</span>
               <span class="flex items-center">
                 <button
+                  class="p-1 mr-1"
+                  aria-label="Duplicate block"
+                  title="Duplicate block"
+                  @click.stop="duplicateBlock(block, index, blockIndex + 1)"
+                >
+                  <DocumentDuplicate />
+                </button>
+                <button
                   class="text-red-300 p-1 mr-3"
+                  aria-label="Delete block"
+                  title="Delete block"
                   @click.stop="deleteBlock(index, blockIndex)"
                 >
                   <TrashCan />
@@ -339,6 +371,8 @@ export default {
                 />
                 <button
                   class="text-red-300 p-1"
+                  aria-label="Delete setting"
+                  title="Delete setting"
                   @click.stop="deleteBlockSetting(index, blockIndex, key)"
                 >
                   <XMark />

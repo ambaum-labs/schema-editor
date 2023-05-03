@@ -8,6 +8,7 @@ import ChevronDoubleDown from '@/components/icons/ChevronDoubleDown.vue';
 import ChevronDoubleUp from '@/components/icons/ChevronDoubleUp.vue';
 import ChevronDown from '@/components/icons/ChevronDown.vue';
 import ChevronUp from '@/components/icons/ChevronUp.vue';
+import DocumentDuplicate from '@/components/icons/DocumentDuplicate.vue';
 import TrashCan from '@/components/icons/TrashCan.vue';
 import XMark from '@/components/icons/XMark.vue';
 
@@ -22,6 +23,7 @@ export default {
     ChevronDoubleUp,
     ChevronDown,
     ChevronUp,
+    DocumentDuplicate,
     TrashCan,
     XMark,
   },
@@ -69,6 +71,10 @@ export default {
   methods: {
     addBlock() {
       this.blocks.push(createBlock());
+    },
+
+    duplicateBlock(block, index) {
+      this.blocks.splice(index, 0, JSON.parse(JSON.stringify(block)));
     },
 
     toggleAppBlock(enable) {
@@ -186,7 +192,17 @@ export default {
         <span>{{ displayName(block) }}</span>
         <span class="flex items-center">
           <button
+            class="p-1 mr-1"
+            aria-label="Duplicate block"
+            title="Duplicate block"
+            @click.stop="duplicateBlock(block, index + 1)"
+          >
+            <DocumentDuplicate />
+          </button>
+          <button
             class="text-red-300 p-1 mr-3"
+            aria-label="Delete block"
+            title="Delete block"
             @click.stop="deleteBlock(index)"
           >
             <TrashCan />
@@ -236,6 +252,8 @@ export default {
           <button
             v-if="!isRequired(key)"
             class="text-red-300 p-1"
+            aria-label="Delete field"
+            title="Delete field"
             @click.stop="deleteBlockKey(index, key)"
           >
             <XMark />
@@ -273,6 +291,7 @@ export default {
             :settings="block.settings"
             :compact="true"
             @add="(newSetting) => block.settings.push(newSetting)"
+            @duplicate="(index, copy) => block.settings.splice(index, 0, copy)"
             @set="(index, newSetting) => block.settings[index] = newSetting"
             @unset="(index, key) => delete block.settings[index][key]"
             @delete="(index) => block.settings.splice(index, 1)"

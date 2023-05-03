@@ -7,6 +7,7 @@ import ChevronDoubleDown from '@/components/icons/ChevronDoubleDown.vue';
 import ChevronDoubleUp from '@/components/icons/ChevronDoubleUp.vue';
 import ChevronDown from '@/components/icons/ChevronDown.vue';
 import ChevronUp from '@/components/icons/ChevronUp.vue';
+import DocumentDuplicate from '@/components/icons/DocumentDuplicate.vue';
 import TrashCan from '@/components/icons/TrashCan.vue';
 import XMark from '@/components/icons/XMark.vue';
 
@@ -20,6 +21,7 @@ export default {
     ChevronDoubleUp,
     ChevronDown,
     ChevronUp,
+    DocumentDuplicate,
     TrashCan,
     XMark,
   },
@@ -68,7 +70,7 @@ export default {
     },
 
     validBlocks() {
-      return this.blocks.filter(({ type }) => !!type);
+      return Array.from(new Set(this.blocks.filter(({ type }) => !!type)));
     },
 
     blockFields() {
@@ -107,6 +109,10 @@ export default {
       this.defaultPreset.blocks[blockIndex].settings = this.defaultPreset.blocks[blockIndex].settings ?? {};
       this.defaultPreset.blocks[blockIndex].settings[input.value] = '';
       input.value = '';
+    },
+
+    duplicateBlock(block, index) {
+      this.defaultPreset.blocks.splice(index, 0, JSON.parse(JSON.stringify(block)));
     },
 
     resizeTextarea(textarea) {
@@ -174,6 +180,8 @@ export default {
             />
             <button
               class="text-red-300 p-1"
+              aria-label="Delete setting"
+              title="Delete setting"
               @click.stop="deleteSetting(settingId)"
             >
               <XMark />
@@ -236,7 +244,17 @@ export default {
               <span>{{ displayType(block.type) }}</span>
               <span class="flex items-center">
                 <button
+                  class="p-1 mr-1"
+                  aria-label="Duplicate block"
+                  title="Duplicate block"
+                  @click.stop="duplicateBlock(block, blockIndex + 1)"
+                >
+                  <DocumentDuplicate />
+                </button>
+                <button
                   class="text-red-300 p-1 mr-3"
+                  aria-label="Delete block"
+                  title="Delete block"
                   @click.stop="deleteBlock(blockIndex)"
                 >
                   <TrashCan />
@@ -269,6 +287,8 @@ export default {
                 />
                 <button
                   class="text-red-300 p-2"
+                  aria-label="Delete setting"
+                  title="Delete setting"
                   @click.stop="deleteBlockSetting(blockIndex, key)"
                 >
                   <XMark />
