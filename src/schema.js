@@ -131,7 +131,7 @@ export function generateSchema({ name, tag, sectionClass, limit, maxBlocks, sett
   schema += '\n';
   level--;
   schema += indentString('}\n', indent, level);
-  schema += '{% schema %}';
+  schema += '{% endschema %}';
 
   return schema;
 }
