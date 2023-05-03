@@ -120,7 +120,7 @@ export function generateSchema({ name, tag, sectionClass, limit, maxBlocks, sett
     level--;
     schema += indentString(`]`, indent, level);
   }
-  if (!presets.length && Object.keys(defaultPreset || {}).length > 0) {
+  if (Object.keys(defaultPreset || {}).length > 0) {
     schema += `,\n`;
     schema += indentString(`"default": {\n`, indent, level);
     level++;
