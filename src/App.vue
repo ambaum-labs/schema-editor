@@ -1,33 +1,24 @@
 <script>
 import AmbaumLogo from '@/components/icons/AmbaumLogo.vue';
 import ShopifyLogo from '@/components/icons/ShopifyLogo.vue';
-import Github from '@/components/icons/Github.vue';
+import GithubLogo from '@/components/icons/GithubLogo.vue';
 import TabbedContent from '@/components/TabbedContent.vue';
-import Settings from '@/components/tabs/Settings.vue';
-import Locales from '@/components/tabs/Locales.vue';
-import General from '@/components/tabs/General.vue';
-import Blocks from '@/components/tabs/Blocks.vue';
-import Presets from '@/components/tabs/Presets.vue';
-import Default from '@/components/tabs/Default.vue';
-import Code from '@/components/tabs/Code.vue';
-import Saved from '@/components/tabs/Saved.vue';
-import Options from '@/components/tabs/Options.vue';
+import SettingsTab from '@/components/tabs/SettingsTab.vue';
+import LocalesTab from '@/components/tabs/LocalesTab.vue';
+import GeneralTab from '@/components/tabs/GeneralTab.vue';
+import BlocksTab from '@/components/tabs/BlocksTab.vue';
+import PresetsTab from '@/components/tabs/PresetsTab.vue';
+import DefaultTab from '@/components/tabs/DefaultTab.vue';
+import CodeTab from '@/components/tabs/CodeTab.vue';
+import SavedTab from '@/components/tabs/SavedTab.vue';
+import OptionsTab from '@/components/tabs/OptionsTab.vue';
 
 export default {
   components: {
     AmbaumLogo,
     ShopifyLogo,
     TabbedContent,
-    General,
-    Settings,
-    Locales,
-    Blocks,
-    Presets,
-    Default,
-    Code,
-    Saved,
-    Options,
-    Github,
+    GithubLogo,
   },
 
   data() {
@@ -36,25 +27,25 @@ export default {
         {
           default: 'general',
           tabs: [
-            { title: 'General', value: 'general', component: General },
-            { title: 'Settings', value: 'settings', component: Settings },
-            { title: 'Locales', value: 'locales', component: Locales },
+            { title: 'General', value: 'general', component: GeneralTab },
+            { title: 'Settings', value: 'settings', component: SettingsTab },
+            { title: 'Locales', value: 'locales', component: LocalesTab },
           ],
         },
         {
           default: 'blocks',
           tabs: [
-            { title: 'Blocks', value: 'blocks', component: Blocks },
-            { title: 'Presets', value: 'presets', component: Presets },
-            { title: 'Default', value: 'default', component: Default },
+            { title: 'Blocks', value: 'blocks', component: BlocksTab },
+            { title: 'Presets', value: 'presets', component: PresetsTab },
+            { title: 'Default', value: 'default', component: DefaultTab },
           ],
         },
         {
           default: 'code',
           tabs: [
-            { title: 'Code', value: 'code', component: Code },
-            { title: 'Saved', value: 'saved', component: Saved },
-            { title: 'Options', value: 'options', component: Options },
+            { title: 'Code', value: 'code', component: CodeTab },
+            { title: 'Saved', value: 'saved', component: SavedTab },
+            { title: 'Options', value: 'options', component: OptionsTab },
           ],
         },
       ],
@@ -82,6 +73,7 @@ export default {
   <main class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-10 xl:gap-5 flex-1 px-5 pt-5 pb-4 xl:max-h-[calc(100vh-105px)]">
     <TabbedContent
       v-for="(card, index) in cards"
+      :key="card.default"
       v-bind="card"
       :class="{
         'md:col-span-2': index === cards.length - 1,
@@ -110,7 +102,7 @@ export default {
       </ul>
     </div>
     <a href="https://github.com/ambaum-labs/schema-editor" target="_blank" class="flex items-center w-5 h-5 ml-2">
-      <Github class="max-w-full h-auto" />
+      <GithubLogo class="max-w-full h-auto" />
     </a>
   </footer>
 </template>

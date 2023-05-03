@@ -2,12 +2,13 @@
 import { mapWritableState } from 'pinia';
 import { useSchemaStore } from '@/stores/schema';
 import { hiddenFields, requiredFields, optionalFields, createBlock, createAppBlock } from '@/blocks';
+import { updateTypedFields } from '@/settings';
 import SettingsManager from '@/components/SettingsManager.vue';
 import ChevronDoubleDown from '@/components/icons/ChevronDoubleDown.vue';
 import ChevronDoubleUp from '@/components/icons/ChevronDoubleUp.vue';
 import ChevronDown from '@/components/icons/ChevronDown.vue';
 import ChevronUp from '@/components/icons/ChevronUp.vue';
-import Trash from '@/components/icons/Trash.vue';
+import TrashCan from '@/components/icons/TrashCan.vue';
 import XMark from '@/components/icons/XMark.vue';
 
 export default {
@@ -21,7 +22,7 @@ export default {
     ChevronDoubleUp,
     ChevronDown,
     ChevronUp,
-    Trash,
+    TrashCan,
     XMark,
   },
 
@@ -188,7 +189,7 @@ export default {
             class="text-red-300 p-1 mr-3"
             @click.stop="deleteBlock(index)"
           >
-            <Trash />
+            <TrashCan />
           </button>
           <ChevronDown v-show="block.expanded" />
           <ChevronUp v-show="!block.expanded" />
@@ -207,7 +208,10 @@ export default {
             @change="(e) => addField(index, e.currentTarget)"
           >
             <option value="">Add Property</option>
-            <option v-for="field in additionalFields(block)" :value="field">
+            <option
+              v-for="field in additionalFields(block)"
+              :key="field"
+              :value="field">
               {{ field }}
             </option>
           </select>
@@ -268,6 +272,10 @@ export default {
             :active="active"
             :settings="block.settings"
             :compact="true"
+            @add="(newSetting) => block.settings.push(newSetting)"
+            @set="(index, newSetting) => block.settings[index] = newSetting"
+            @unset="(index, key) => delete block.settings[index][key]"
+            @delete="(index) => block.settings.splice(index, 1)"
           />
         </div>
       </div>

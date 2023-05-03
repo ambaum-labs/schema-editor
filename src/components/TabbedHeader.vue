@@ -20,6 +20,7 @@ export default {
   <div class="flex mb-5 w-full">
     <button 
       v-for="(tab, i) in tabs"
+      :key="tab.value"
       :class="classes(i, tab.value)"
       class="py-2 px-5 flex-1 font-semibold border-slate-800"
       @click="$emit('change', tab.value)"

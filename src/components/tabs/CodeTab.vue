@@ -1,8 +1,8 @@
 <script>
 import { mapState, mapActions } from 'pinia';
 import { useSchemaStore } from '@/stores/schema';
-import Link from '@/components/icons/Link.vue';
-import Clipboard from '@/components/icons/Clipboard.vue';
+import LinkChain from '@/components/icons/LinkChain.vue';
+import ClipboardEmpty from '@/components/icons/ClipboardEmpty.vue';
 import ClipboardChecked from '@/components/icons/ClipboardChecked.vue';
 
 export default {
@@ -11,8 +11,8 @@ export default {
   },
 
   components: {
-    Link,
-    Clipboard,
+    LinkChain,
+    ClipboardEmpty,
     ClipboardChecked,
   },
 
@@ -47,7 +47,6 @@ export default {
 
     copyLink() {
       this.copyingLink = true;
-      const store = useSchemaStore();
       navigator.clipboard.writeText(this.getShareLink());
       setTimeout(() => {
         this.copyingLink = false;
@@ -82,14 +81,14 @@ export default {
             class="bg-slate-800 rounded-lg transition p-2 mr-2"
             @click="copyLink"
           >
-            <Link />
+            <LinkChain />
           </button>
           <button
             :class="{ 'text-yellow-400': copyingToClipboard }"
             class="bg-slate-800 rounded-lg transition p-2"
             @click="copyToClipboard"
           >
-            <Clipboard v-show="!copyingToClipboard" />
+            <ClipboardEmpty v-show="!copyingToClipboard" />
             <ClipboardChecked
               v-show="copyingToClipboard"
             />

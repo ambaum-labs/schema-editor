@@ -50,6 +50,7 @@ export default {
     <h2 class="text-lg font-semibold mb-3">Schema output options</h2>
     <div
       v-for="([key, value]) in codeOptionsArray"
+      :key="key"
       class="flex items-center mb-3"
     >
       <label

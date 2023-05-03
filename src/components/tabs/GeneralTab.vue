@@ -58,7 +58,10 @@ export default {
         @input="({ currentTarget }) => general.tag = currentTarget.value.trim()"
       >
         <option></option>
-        <option v-for="tag in validTags">{{ tag }}</option>
+        <option
+          v-for="tag in validTags"
+          :key="tag"
+        >{{ tag }}</option>
       </select>
     </div>
     <div class="flex items-center mb-3">

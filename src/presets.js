@@ -1,4 +1,4 @@
-import { hiddenFields, applyHiddenFields } from '@/settings';
+import { applyHiddenFields } from '@/settings';
 
 export const requiredFields = [
   { field: 'name', defaultValue: '', type: 'text' },

@@ -1,6 +1,6 @@
 <script>
-import Card from '@/components/Card.vue';
-import Tabs from '@/components/Tabs.vue';
+import CardFrame from '@/components/CardFrame.vue';
+import TabbedHeader from '@/components/TabbedHeader.vue';
 
 export default {
   props: {
@@ -9,8 +9,8 @@ export default {
   },
 
   components: {
-    Card,
-    Tabs,
+    CardFrame,
+    TabbedHeader,
   },
 
   data() {
@@ -22,8 +22,8 @@ export default {
 </script>
 
 <template>
-  <Card :padded="false" class="flex flex-col">
-    <Tabs
+  <CardFrame :padded="false" class="flex flex-col">
+    <TabbedHeader
       :tabs="tabs"
       :active="activeTab"
       @change="(tab) => activeTab = tab"
@@ -31,10 +31,11 @@ export default {
     <div class="pb-4 px-5 flex-1 overflow-y-auto">
       <component
         v-for="tab in tabs"
+        :key="tab.value"
         :is="tab.component"
         :active="activeTab === tab.value"
         @changeTab="(newTab) => activeTab = newTab"
       />
     </div>
-  </Card>
+  </CardFrame>
 </template>

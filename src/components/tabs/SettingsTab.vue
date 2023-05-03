@@ -1,5 +1,5 @@
 <script>
-import { mapWritableState, mapActions } from 'pinia';
+import { mapWritableState } from 'pinia';
 import { useSchemaStore } from '@/stores/schema';
 import SettingsManager from '@/components/SettingsManager.vue';
 import ChevronDoubleDown from '@/components/icons/ChevronDoubleDown.vue';
@@ -62,6 +62,10 @@ export default {
       v-show="active"
       :active="active"
       :settings="settings"
+      @add="(newSetting) => settings.push(newSetting)"
+      @set="(index, newSetting) => settings[index] = newSetting"
+      @unset="(index, key) => delete settings[index][key]"
+      @delete="(index) => settings.splice(index, 1)"
     />
   </div>
 </template>

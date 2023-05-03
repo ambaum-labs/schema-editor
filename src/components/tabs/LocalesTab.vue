@@ -7,7 +7,7 @@ import ChevronDoubleDown from '@/components/icons/ChevronDoubleDown.vue';
 import ChevronDoubleUp from '@/components/icons/ChevronDoubleUp.vue';
 import ChevronDown from '@/components/icons/ChevronDown.vue';
 import ChevronUp from '@/components/icons/ChevronUp.vue';
-import Trash from '@/components/icons/Trash.vue';
+import TrashCan from '@/components/icons/TrashCan.vue';
 import XMark from '@/components/icons/XMark.vue';
 
 export default {
@@ -20,7 +20,7 @@ export default {
     ChevronDoubleUp,
     ChevronDown,
     ChevronUp,
-    Trash,
+    TrashCan,
     XMark,
   },
 
@@ -151,7 +151,7 @@ export default {
             class="text-red-300 p-1 mr-3"
             @click.stop="deleteLocale(language)"
           >
-            <Trash />
+            <TrashCan />
           </button>
           <ChevronDown v-show="expanded" />
           <ChevronUp v-show="!expanded" />
@@ -191,10 +191,11 @@ export default {
             <textarea
               ref="textareas"
               :id="language + '-' + key + '-value'"
+              :value="value"
               rows="1"
               class="flex-1 min-w-0 bg-slate-700 py-1 px-3 leading-snug resize-none"
               @input="(e) => textareaUpdate(e, language, index)"
-            >{{ value }}</textarea>
+            />
             <button
               class="text-red-300 p-1"
               @click.stop="deleteTranslation(language, index)"
@@ -219,7 +220,11 @@ export default {
         @change="(e) => addLocale(e.currentTarget)"
       >
         <option value="">Add Locale</option>
-        <option v-for="([abbreviation, language]) in unusedLocales" :value="abbreviation">
+        <option
+          v-for="([abbreviation, language]) in unusedLocales"
+          :key="abbreviation"
+          :value="abbreviation"
+        >
           {{ language }}
         </option>
       </select>

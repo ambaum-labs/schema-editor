@@ -1,13 +1,13 @@
 <script>
 import { mapWritableState } from 'pinia';
 import { useSchemaStore } from '@/stores/schema';
-import { optionalFields, createPresetSetting, createPresetBlock } from '@/presets';
+import { createPreset, createPresetBlock } from '@/presets';
 import { hiddenFields } from '@/settings';
 import ChevronDoubleDown from '@/components/icons/ChevronDoubleDown.vue';
 import ChevronDoubleUp from '@/components/icons/ChevronDoubleUp.vue';
 import ChevronDown from '@/components/icons/ChevronDown.vue';
 import ChevronUp from '@/components/icons/ChevronUp.vue';
-import Trash from '@/components/icons/Trash.vue';
+import TrashCan from '@/components/icons/TrashCan.vue';
 import XMark from '@/components/icons/XMark.vue';
 
 export default {
@@ -20,7 +20,7 @@ export default {
     ChevronDoubleUp,
     ChevronDown,
     ChevronUp,
-    Trash,
+    TrashCan,
     XMark,
   },
 
@@ -52,7 +52,7 @@ export default {
     ...mapWritableState(useSchemaStore, [
       'settings',
       'blocks',
-      'defaultPreset',
+      'presets',
     ]),
 
     validSettings() {
@@ -60,7 +60,7 @@ export default {
     },
 
     unusedSettings() {
-      return (preset) => this.validSettings.filter(({ id }) => !preset.settings?.hasOwnProperty(id));
+      return (preset) => this.validSettings.filter(({ id }) => !Object.prototype.hasOwnProperty.call(preset.settings, id));
     },
 
     presetSettings() {
@@ -91,21 +91,25 @@ export default {
   },
 
   methods: {
-    addSetting(input) {
-      this.defaultPreset.settings = this.defaultPreset?.settings ?? {};
-      this.defaultPreset.settings[input.value.trim()] = '';
+    addPreset() {
+      this.presets.push(createPreset());
+    },
+
+    addSetting(index, input) {
+      this.presets[index].settings = this.presets[index]?.settings ?? {};
+      this.presets[index].settings[input.value.trim()] = '';
       input.value = '';
     },
 
-    addBlock({ currentTarget }) {
-      this.defaultPreset.blocks = this.defaultPreset?.blocks ?? [];
-      this.defaultPreset.blocks.push(createPresetBlock(currentTarget.value));
+    addBlock({ currentTarget }, index) {
+      this.presets[index].blocks = this.presets[index]?.blocks ?? [];
+      this.presets[index].blocks.push(createPresetBlock(currentTarget.value));
       currentTarget.value = '';
     },
 
-    addBlockSetting(blockIndex, input) {
-      this.defaultPreset.blocks[blockIndex].settings = this.defaultPreset.blocks[blockIndex].settings ?? {};
-      this.defaultPreset.blocks[blockIndex].settings[input.value] = '';
+    addBlockSetting(presetIndex, blockIndex, input) {
+      this.presets[presetIndex].blocks[blockIndex].settings = this.presets[presetIndex].blocks[blockIndex].settings ?? {};
+      this.presets[presetIndex].blocks[blockIndex].settings[input.value] = '';
       input.value = '';
     },
 
@@ -114,30 +118,41 @@ export default {
       textarea.style.height = `${textarea.scrollHeight}px`;
     },
 
-    textareaUpdate({ currentTarget }, key) {
+    textareaUpdate({ currentTarget }, index, key) {
       this.resizeTextarea(currentTarget);
-      this.defaultPreset.settings[key] = currentTarget.value.trim();
+      this.presets[index].settings[key] = currentTarget.value.trim();
     },
 
-    blockTextAreaUpdate({ currentTarget }, blockIndex, key) {
+    blockTextAreaUpdate({ currentTarget }, presetIndex, blockIndex, key) {
       this.resizeTextarea(currentTarget);
-      this.defaultPreset.blocks[blockIndex].settings[key] = currentTarget.value;
+      this.presets[presetIndex].blocks[blockIndex].settings[key] = currentTarget.value;
     },
 
-    toggleBlocks(expanded) {
-      this.defaultPreset.blocks.forEach(block => block.expanded = expanded);
+    togglePresets(expanded) {
+      this.presets?.forEach((preset) => {
+        preset.expanded = expanded;
+        this.toggleBlocks(preset.blocks, expanded);
+      });
     },
 
-    deleteBlock(index) {
-      this.defaultPreset.blocks.splice(index, 1);
+    toggleBlocks(blocks, expanded) {
+      blocks?.forEach(block => block.expanded = expanded);
     },
 
-    deleteSetting(key) {
-      delete this.defaultPreset.settings[key];
+    deletePreset(index) {
+      this.presets.splice(index, 1);
     },
 
-    deleteBlockSetting(index, key) {
-      delete this.defaultPreset.blocks[index].settings[key];
+    deleteBlock(presetIndex, blockIndex) {
+      this.presets[presetIndex].blocks.splice(blockIndex, 1);
+    },
+
+    deleteSetting(presetIndex, settingId) {
+      delete this.presets[presetIndex].settings[settingId];
+    },
+
+    deleteBlockSetting(presetIndex, blockIndex, key) {
+      delete this.presets[presetIndex].blocks[blockIndex].settings[key];
     },
   },
 };
@@ -148,43 +163,100 @@ export default {
     v-show="active"
     class="flex flex-col"
   >
-    <h2 class="text-lg font-semibold mb-3">Default</h2>
-    <p class="px-4 mb-3">For static sections only, for dynamic sectons use presets.</p>
-    <p class="px-4 mb-3">If you have already defined presets, all settings here in Default will be omitted from your schema.  You can delete your Presets to use Default instead.</p>
-    <div class="flex flex-col border-slate-700 border-2 mb-3">
-      <div class="flex flex-col">
+    <h2 class="flex justify-between items-center text-lg font-semibold mb-3">
+      <span>Presets</span>
+      <span
+        v-show="presets.length"
+        class="flex"
+      >
+        <button
+          aria-label="Collapse all"
+          title="Collapse all"
+          class="mr-2"
+          @click="togglePresets(false)"
+        >
+          <ChevronDoubleUp />
+        </button>
+        <button
+          aria-label="Expand all"
+          title="Expand all"
+          @click="togglePresets(true)"
+        >
+          <ChevronDoubleDown />
+        </button>
+      </span>
+    </h2>
+    <div
+      v-for="(preset, index) in presets"
+      :key="preset.uuid"
+      class="flex flex-col border-slate-700 border-2 mb-3"
+    >
+      <button
+        class="flex justify-between items-center p-2 bg-wine text-left"
+        @click="presets[index].expanded = !preset.expanded"
+      >
+        <span>{{ preset.name || 'New Preset' }}</span>
+        <span class="flex items-center">
+          <button
+            class="text-red-300 p-1 mr-3"
+            @click.stop="deletePreset(index)"
+          >
+            <TrashCan />
+          </button>
+          <ChevronDown v-show="preset.expanded" />
+          <ChevronUp v-show="!preset.expanded" />
+        </span>
+      </button>
+      <div
+        v-show="preset.expanded"
+        class="flex flex-col pt-3"
+      >
+        <div class="flex items-start px-4 mb-3">
+          <label
+            :for="`preset-${index}-name`"
+            class="w-[90px] min-w-[90px] mr-3"
+          >name</label>
+          <input
+            :id="`preset-${index}-name`"
+            :value="preset.name"
+            class="flex-1 min-w-0 bg-slate-700 py-1.5 px-3 leading-none"
+            @input="({ currentTarget }) => presets[index].name = currentTarget.value.trim()"
+          >
+        </div>
         <div class="flex flex-col mb-3 border-t border-slate-800">
           <h3 class="mb-3 px-4 py-2 bg-twilight">settings</h3>
           <div
-            v-for="([settingId, value]) in presetSettings(defaultPreset)"
+            v-for="([settingId, value]) in presetSettings(preset)"
+            :key="settingId"
             class="flex items-start px-6 mb-3"
           >
             <label
-              :for="`${settingId}-default`"
+              :for="`${settingId}-${preset.uuid}`"
               class="min-w-[90px] w-[90px] leading-none py-1.5 mr-3"
             >{{ settingId }}</label>
             <textarea
               ref="textareas"
-              :id="`${settingId}-default`"
+              :id="`${settingId}-${preset.uuid}`"
+              :value="value"
               rows="1"
               class="flex-1 min-w-0 bg-slate-700 py-1 px-3 leading-snug resize-none"
-              @input="(e) => textareaUpdate(e, settingId)"
-            >{{ value }}</textarea>
+              @input="(e) => textareaUpdate(e, index, settingId)"
+            />
             <button
               class="text-red-300 p-1"
-              @click.stop="deleteSetting(settingId)"
+              @click.stop="deleteSetting(index, settingId)"
             >
               <XMark />
             </button>
           </div>
           <select
-            v-if="unusedSettings(defaultPreset).length"
+            v-if="unusedSettings(preset).length"
             class="flex-1 bg-slate-700 py-1.5 px-3 mx-4 mb-3 leading-snug"
-            @change="(e) => addSetting(e.currentTarget)"
+            @change="(e) => addSetting(index, e.currentTarget)"
           >
             <option value="">Add Setting</option>
             <option
-              v-for="({ id }) in unusedSettings(defaultPreset)"
+              v-for="({ id }) in unusedSettings(preset)"
               :value="id"
               :key="id"
             >
@@ -195,35 +267,35 @@ export default {
             class="mb-2 px-4"
             v-if="!validSettings.length"
           >
-            To add settings to the default preset you must first define them in the Settings tab
+            To add settings to a preset you must first define them in the Settings tab
           </p>
         </div>
         <div class="flex flex-col px-4 pt-2 mb-3 border-t border-slate-800">
-          <h3 class="flex justify-between items-center mb-3">
+          <h3 class="flex justify-between items-center py-1 mb-3">
             <span>blocks</span>
             <span
-              v-show="defaultPreset.blocks && defaultPreset.blocks.length"
+              v-show="preset.blocks && preset.blocks.length"
               class="flex"
             >
               <button
                 aria-label="Collapse all"
                 title="Collapse all"
                 class="mr-2"
-                @click="toggleBlocks(false)"
+                @click="toggleBlocks(preset.blocks, false)"
               >
                 <ChevronDoubleUp />
               </button>
               <button
                 aria-label="Expand all"
                 title="Expand all"
-                @click="toggleBlocks(true)"
+                @click="toggleBlocks(preset.blocks, true)"
               >
                 <ChevronDoubleDown />
               </button>
             </span>
           </h3>
           <div
-            v-for="(block, blockIndex) in defaultPreset.blocks"
+            v-for="(block, blockIndex) in preset.blocks"
             :key="block.uuid"
             class="flex flex-col border-slate-700 border-2 mb-3"
           >
@@ -235,9 +307,9 @@ export default {
               <span class="flex items-center">
                 <button
                   class="text-red-300 p-1 mr-3"
-                  @click.stop="deleteBlock(blockIndex)"
+                  @click.stop="deleteBlock(index, blockIndex)"
                 >
-                  <Trash />
+                  <TrashCan />
                 </button>
                 <ChevronDown v-show="block.expanded" />
                 <ChevronUp v-show="!block.expanded" />
@@ -245,12 +317,12 @@ export default {
             </button>
             <div
               v-show="block.expanded"
-              class="flex flex-col px-4 pt-3"
+              class="flex flex-col pt-3"
             >
               <div
                 v-for="([key, value]) in blockFields(block)"
                 :key="key"
-                class="flex items-start mb-3"
+                class="flex items-start px-4 mb-3"
               >
                 <label
                   :for="`${key}-${block.uuid}`"
@@ -259,22 +331,23 @@ export default {
                 <textarea
                   ref="textareas"
                   :id="`${key}-${block.uuid}`"
+                  :value="value"
                   :readonly="key === 'type'"
                   rows="1"
                   class="flex-1 min-w-0 bg-slate-700 py-1 px-3 leading-snug resize-none"
-                  @input="(e) => blockTextAreaUpdate(e, blockIndex, key)"
-                >{{ value }}</textarea>
+                  @input="(e) => blockTextAreaUpdate(e, index, blockIndex, key)"
+                />
                 <button
-                  class="text-red-300 p-2"
-                  @click.stop="deleteBlockSetting(blockIndex, key)"
+                  class="text-red-300 p-1"
+                  @click.stop="deleteBlockSetting(index, blockIndex, key)"
                 >
                   <XMark />
                 </button>
               </div>
               <select
                 v-if="unusedBlockSettings(block).length"
-                class="flex-1 bg-slate-700 py-1.5 px-3 mb-3 leading-snug"
-                @change="(e) => addBlockSetting(blockIndex, e.currentTarget)"
+                class="flex-1 bg-slate-700 py-1.5 px-3 mx-4 mb-3 leading-snug"
+                @change="(e) => addBlockSetting(index, blockIndex, e.currentTarget)"
               >
                 <option value="">Add Setting</option>
                 <option
@@ -290,7 +363,7 @@ export default {
           <select
             v-if="validBlocks.length"
             class="flex-1 bg-slate-700 py-1.5 px-3 mb-3 leading-snug"
-            @change="(e) => addBlock(e)"
+            @change="(e) => addBlock(e, index)"
           >
             <option value="">Add Block</option>
             <option
@@ -301,12 +374,13 @@ export default {
               {{ type }}
             </option>
           </select>
-          <p
-            v-else
-            class="px-4 py-2"
-          >To add blocks to the default preset you must first define them in the Blocks tab</p>
+          <p v-else>To add blocks to a preset you must first define them in the Blocks tab</p>
         </div>
       </div>
     </div>
+    <button
+      class="mt-5 rounded-md px-5 py-1 bg-slate-700 font-semibold uppercase text-sm"
+      @click="addPreset"
+    >Add Preset</button>
   </div>
 </template>

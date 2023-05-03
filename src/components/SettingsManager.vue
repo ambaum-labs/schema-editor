@@ -2,7 +2,7 @@
 import { settingTypes, hiddenFields, createSetting, updateTypedFields } from '@/settings';
 import ChevronDown from '@/components/icons/ChevronDown.vue';
 import ChevronUp from '@/components/icons/ChevronUp.vue';
-import Trash from '@/components/icons/Trash.vue';
+import TrashCan from '@/components/icons/TrashCan.vue';
 import XMark from '@/components/icons/XMark.vue';
 
 export default {
@@ -15,7 +15,7 @@ export default {
   components: {
     ChevronDown,
     ChevronUp,
-    Trash,
+    TrashCan,
     XMark,
   },
 
@@ -95,7 +95,7 @@ export default {
 
   methods: {
     addSetting() {
-      this.settings.push(createSetting());
+      this.$emit('add', createSetting());
     },
 
     changeSetting(index, key, value) {
@@ -103,7 +103,7 @@ export default {
       if (key === 'type') {
         newSetting = updateTypedFields(newSetting);
       }
-      this.settings[index] = newSetting;
+      this.$emit('set', index, newSetting);
 
       if (key === 'expanded' && value) {
         this.$nextTick(() => {
@@ -128,11 +128,11 @@ export default {
     },
 
     deleteSetting(index) {
-      this.settings.splice(index, 1);
+      this.$emit('delete', index);
     },
 
     deleteSettingKey(index, key) {
-      delete this.settings[index][key];
+      this.$emit('unset', index, key);
     },
   },
 };
@@ -157,7 +157,7 @@ export default {
             class="text-red-300 p-1 mr-3"
             @click.stop="deleteSetting(index)"
           >
-            <Trash />
+            <TrashCan />
           </button>
           <ChevronDown v-show="setting.expanded" />
           <ChevronUp v-show="!setting.expanded" />
@@ -173,12 +173,17 @@ export default {
           @change="(e) => addField(index, e.currentTarget)"
         >
           <option value="">Add Property</option>
-          <option v-for="field in additionalFields(setting)" :value="field">
+          <option
+            v-for="field in additionalFields(setting)"
+            :key="field"
+            :value="field"
+          >
             {{ field }}
           </option>
         </select>
         <div
           v-for="([key, value]) in settingFields(setting)"
+          :key="key"
           class="flex items-start px-4 mb-3"
         >
           <label
@@ -196,7 +201,12 @@ export default {
               :key="label"
               :label="`${label} settings`"
             >
-              <option v-for="type in types" :value="type" :selected="type === setting.type">
+              <option
+                v-for="type in types"
+                :key="type"
+                :value="type"
+                :selected="type === setting.type"
+              >
                 {{ type }}
               </option>
             </optgroup>
@@ -205,10 +215,11 @@ export default {
             v-else
             ref="textareas"
             :id="`${key}-${setting.uuid}`"
+            :value="value"
             rows="1"
             class="flex-1 min-w-0 bg-slate-700 py-1 px-3 leading-snug resize-none"
             @input="(e) => textareaUpdate(e, index, key)"
-          >{{ value }}</textarea>
+          />
           <button
             v-if="!isRequired(index, key)"
             class="text-red-300 p-1"

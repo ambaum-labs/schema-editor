@@ -106,7 +106,6 @@ export default {
       <p class="text-sm mr-3 flex-1">Save or load your configurations from file</p>
       <button
         class="rounded-md px-5 py-1 mr-3 bg-yellow-400 text-slate-900 font-semibold uppercase text-sm"
-        @click=""
       >Import</button>
       <a
         :href="exportUrl"
