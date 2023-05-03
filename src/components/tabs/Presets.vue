@@ -8,6 +8,7 @@ import ChevronDoubleUp from '@/components/icons/ChevronDoubleUp.vue';
 import ChevronDown from '@/components/icons/ChevronDown.vue';
 import ChevronUp from '@/components/icons/ChevronUp.vue';
 import Trash from '@/components/icons/Trash.vue';
+import XMark from '@/components/icons/XMark.vue';
 
 export default {
   props: {
@@ -20,6 +21,7 @@ export default {
     ChevronDown,
     ChevronUp,
     Trash,
+    XMark,
   },
 
   watch: {
@@ -239,10 +241,10 @@ export default {
               @input="(e) => textareaUpdate(e, index, settingId)"
             >{{ value }}</textarea>
             <button
-              class="text-red-300 p-2"
+              class="text-red-300 p-1"
               @click.stop="deleteSetting(index, settingId)"
             >
-              <Trash />
+              <XMark />
             </button>
           </div>
           <select
@@ -333,10 +335,10 @@ export default {
                   @input="(e) => blockTextAreaUpdate(e, index, blockIndex, key)"
                 >{{ value }}</textarea>
                 <button
-                  class="text-red-300 p-2"
+                  class="text-red-300 p-1"
                   @click.stop="deleteBlockSetting(index, blockIndex, key)"
                 >
-                  <Trash />
+                  <XMark />
                 </button>
               </div>
               <select

@@ -8,6 +8,7 @@ import ChevronDoubleUp from '@/components/icons/ChevronDoubleUp.vue';
 import ChevronDown from '@/components/icons/ChevronDown.vue';
 import ChevronUp from '@/components/icons/ChevronUp.vue';
 import Trash from '@/components/icons/Trash.vue';
+import XMark from '@/components/icons/XMark.vue';
 
 export default {
   props: {
@@ -21,6 +22,7 @@ export default {
     ChevronDown,
     ChevronUp,
     Trash,
+    XMark,
   },
 
   computed: {
@@ -229,10 +231,10 @@ export default {
           >
           <button
             v-if="!isRequired(key)"
-            class="text-red-300 p-2"
+            class="text-red-300 p-1"
             @click.stop="deleteBlockKey(index, key)"
           >
-            <Trash />
+            <XMark />
           </button>
         </div>
         <div

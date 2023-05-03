@@ -3,6 +3,7 @@ import { settingTypes, hiddenFields, createSetting, updateTypedFields } from '@/
 import ChevronDown from '@/components/icons/ChevronDown.vue';
 import ChevronUp from '@/components/icons/ChevronUp.vue';
 import Trash from '@/components/icons/Trash.vue';
+import XMark from '@/components/icons/XMark.vue';
 
 export default {
   props: {
@@ -14,7 +15,8 @@ export default {
   components: {
     ChevronDown,
     ChevronUp,
-    Trash
+    Trash,
+    XMark,
   },
 
   watch: {
@@ -209,10 +211,10 @@ export default {
           >{{ value }}</textarea>
           <button
             v-if="!isRequired(index, key)"
-            class="text-red-300 p-2"
+            class="text-red-300 p-1"
             @click.stop="deleteSettingKey(index, key)"
           >
-            <Trash />
+            <XMark />
           </button>
         </div>
       </div>
