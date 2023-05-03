@@ -57,6 +57,10 @@ export default {
     fieldType() {
       return (key) => this.allFields.find(({ field }) => field === key)?.type ?? 'text';
     },
+
+    isRequired() {
+      return (key) => requiredFields.some(({ field }) => field === key);
+    },
   },
 
   methods: {
@@ -100,6 +104,10 @@ export default {
 
     deleteBlock(index) {
       this.blocks.splice(index, 1);
+    },
+
+    deleteBlockKey(index, key) {
+      delete this.blocks[index][key];
     },
   },
 };
@@ -219,6 +227,13 @@ export default {
             class="flex-1 min-w-0 bg-slate-700 py-1.5 px-3 leading-none"
             @input="({ currentTarget }) => blocks[index][key] = currentTarget.value.trim()"
           >
+          <button
+            v-if="!isRequired(key)"
+            class="text-red-300 p-2"
+            @click.stop="deleteBlockKey(index, key)"
+          >
+            <Trash />
+          </button>
         </div>
         <div
           v-if="block.settings"

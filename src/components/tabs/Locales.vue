@@ -98,6 +98,10 @@ export default {
     deleteLocale(language) {
       delete this.locales[language];
     },
+
+    deleteTranslation(language, index) {
+      this.locales[language].translations.splice(index, 1);
+    },
   },
 };
 </script>
@@ -155,7 +159,10 @@ export default {
         v-show="expanded"
         class="flex flex-col pt-3"
       >
-        <div class="grid grid-cols-12 px-4 mb-3">
+        <div
+          v-if="translations.length"
+          class="grid grid-cols-12 px-4 mb-3"
+        >
           <span class="col-span-4">Key</span>
           <span class="col-span-8">Translation</span>
         </div>
@@ -178,13 +185,21 @@ export default {
             :for="`${language}-${uuid}-value`"
             class="sr-only"
           >Translation text</label>
-          <textarea
-            ref="textareas"
-            :id="language + '-' + key + '-value'"
-            rows="1"
-            class="col-span-8 bg-slate-700 py-1 px-3 leading-snug resize-none"
-            @input="(e) => textareaUpdate(e, language, index)"
-          >{{ value }}</textarea>
+          <div class="col-span-8 flex">
+            <textarea
+              ref="textareas"
+              :id="language + '-' + key + '-value'"
+              rows="1"
+              class="flex-1 bg-slate-700 py-1 px-3 leading-snug resize-none"
+              @input="(e) => textareaUpdate(e, language, index)"
+            >{{ value }}</textarea>
+            <button
+              class="text-red-300 p-2"
+              @click.stop="deleteTranslation(language, index)"
+            >
+              <Trash />
+            </button>
+          </div>
         </div>
         <button
           class="mt-5 mx-4 mb-3 rounded-md px-5 py-1 bg-slate-700 font-semibold uppercase text-sm"

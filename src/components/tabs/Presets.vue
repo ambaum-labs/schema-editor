@@ -144,6 +144,14 @@ export default {
     deleteBlock(presetIndex, blockIndex) {
       this.presets[presetIndex].blocks.splice(blockIndex, 1);
     },
+
+    deleteSetting(presetIndex, settingId) {
+      delete this.presets[presetIndex].settings[settingId];
+    },
+
+    deleteBlockSetting(presetIndex, blockIndex, key) {
+      delete this.presets[presetIndex].blocks[blockIndex].settings[key];
+    },
   },
 };
 </script>
@@ -230,6 +238,12 @@ export default {
               class="flex-1 min-w-0 bg-slate-700 py-1 px-3 leading-snug resize-none"
               @input="(e) => textareaUpdate(e, index, settingId)"
             >{{ value }}</textarea>
+            <button
+              class="text-red-300 p-2"
+              @click.stop="deleteSetting(index, settingId)"
+            >
+              <Trash />
+            </button>
           </div>
           <select
             v-if="unusedSettings(preset).length"
@@ -318,6 +332,12 @@ export default {
                   class="flex-1 min-w-0 bg-slate-700 py-1 px-3 leading-snug resize-none"
                   @input="(e) => blockTextAreaUpdate(e, index, blockIndex, key)"
                 >{{ value }}</textarea>
+                <button
+                  class="text-red-300 p-2"
+                  @click.stop="deleteBlockSetting(index, blockIndex, key)"
+                >
+                  <Trash />
+                </button>
               </div>
               <select
                 v-if="unusedBlockSettings(block).length"

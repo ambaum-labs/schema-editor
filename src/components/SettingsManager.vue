@@ -82,6 +82,13 @@ export default {
         return optionalFields.filter(field => !keys.includes(field));
       };
     },
+
+    isRequired() {
+      return (index, key) => {
+        const { requiredFields } = settingTypes.find(({ type }) => type === this.settings[index].type);
+        return requiredFields.includes(key);
+      };
+    },
   },
 
   methods: {
@@ -120,6 +127,10 @@ export default {
 
     deleteSetting(index) {
       this.settings.splice(index, 1);
+    },
+
+    deleteSettingKey(index, key) {
+      delete this.settings[index][key];
     },
   },
 };
@@ -196,6 +207,13 @@ export default {
             class="flex-1 min-w-0 bg-slate-700 py-1 px-3 leading-snug resize-none"
             @input="(e) => textareaUpdate(e, index, key)"
           >{{ value }}</textarea>
+          <button
+            v-if="!isRequired(index, key)"
+            class="text-red-300 p-2"
+            @click.stop="deleteSettingKey(index, key)"
+          >
+            <Trash />
+          </button>
         </div>
       </div>
     </div>
