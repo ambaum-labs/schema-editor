@@ -155,8 +155,6 @@ export default {
     class="flex flex-col"
   >
     <h2 class="text-lg font-semibold mb-3">Default</h2>
-    <p class="px-4 mb-3">For static sections only, for dynamic sectons use presets.</p>
-    <p class="px-4 mb-3">If you have already defined presets, all settings here in Default will be omitted from your schema.  You can delete your Presets to use Default instead.</p>
     <div class="flex flex-col border-slate-700 border-2 mb-3">
       <div class="flex flex-col">
         <div class="flex flex-col mb-3 border-t border-slate-800">
