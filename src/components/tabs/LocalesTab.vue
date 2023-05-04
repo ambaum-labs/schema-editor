@@ -54,7 +54,7 @@ export default {
     ]),
 
     availableLocales() {
-      return Object.entries(this.locales).map(([language, translations]) => ([language, applyHiddenFields(translations)]));
+      return Object.entries(this.locales);
     },
 
     unusedLocales() {

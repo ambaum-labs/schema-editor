@@ -72,22 +72,27 @@ export const useSchemaStore = defineStore('schema', {
         for (const block of this.blocks) {
           block.settings = block.settings?.map(setting => applyHiddenFields(setting));
         }
-        this.locales = applyHiddenFields(locales || defaults.locales);
-        this.presets = Object.from(
-          Object.entries(presets || defaults.presets).map(([language, translations]) => [language, applyHiddenFields(translations)])
-        );
-        for (const preset of this.presets) {
-          preset.blocks = preset.blocks?.map(block => applyHiddenFields(block));
-        }
+        this.locales = Object.assign({}, defaults.locales);
+        Object.entries(locales).forEach(([language, translations]) => {
+          this.locales[language] = applyHiddenFields({ translations: Object.entries(translations).map(([key, value]) => ({ key, value })) });
+        });
+        this.presets = (presets || defaults.presets).map((preset) => {
+          if (preset?.blocks?.length) {
+            preset.blocks = preset.blocks.map(block => applyHiddenFields(block))
+          }
+          return applyHiddenFields(preset);
+        });
         this.defaultPreset = (defaultPreset || defaults.defaultPreset);
-        this.defaultPreset.blocks = defaultPreset.blocks?.map(block => applyHiddenFields(block));
+        if (this.defaultPreset?.blocks?.length) {
+          this.defaultPreset.blocks = this.defaultPreset.blocks.map(block => applyHiddenFields(block)) || [];
+        }
       } catch(err) {
         console.log(err);
         console.error('Schema parsing failed');
       }
     },
 
-    getShareLink() {
+    async getShareLink() {
       const { protocol, host } = window.location;
       const data = {
         general: this.general,

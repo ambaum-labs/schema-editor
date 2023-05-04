@@ -117,7 +117,7 @@ export function generateSchema({
     const localesWithoutHidden = Object.entries(locales).filter(([key]) => !hiddenFields.includes(key));
     const structuredLocales = localesWithoutHidden.reduce((carry, [language, { translations }]) => {
       carry[language] = carry[language] || {};
-      translations.forEach(({ key, value }) => {
+      translations?.forEach(({ key, value }) => {
         carry[language][key] = value;
       });
       return carry;
