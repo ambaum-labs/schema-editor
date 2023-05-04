@@ -3,20 +3,6 @@ import { useOptionsStore } from '@/stores/options';
 import generateSchema from '@/schema';
 import { applyHiddenFields, createSetting } from '@/settings';
 
-/**
- * URL may contain a base64 encoded JSON payload containing
- * a schema definition.  If one exists and is valid, we use
- * that for initial population
- */
-function getSchemaFromUrl() {
-  const urlPayload = window.location.pathname.split('/').pop();
-  try {
-    return JSON.parse(atob(urlPayload));
-  } catch (err) {
-    return undefined;
-  }
-}
-
 function defaultState() {
   return {
     general: {
@@ -38,7 +24,7 @@ function defaultState() {
 
 export const useSchemaStore = defineStore('schema', {
   state: () => ({
-    ...(getSchemaFromUrl() ?? defaultState()),
+    ...defaultState(),
   }),
 
   getters: {
@@ -57,6 +43,25 @@ export const useSchemaStore = defineStore('schema', {
   },
 
   actions: {
+    async getSchemaFromUrl() {
+      const recordId = window.location.pathname.split('/').pop().trim();
+      if (!recordId) {
+        return;
+      }
+
+      try {
+        const { data } = await fetch(`https://api.myjson.online/v1/records/${recordId}`).then(res => res.json());
+        this.general = data.general || this.general;
+        this.settings = data.settings || this.settings;
+        this.blocks = data.blocks || this.blocks;
+        this.locales = data.locales || this.locales;
+        this.presets = data.presets || this.presets;
+        this.defaultPreset = data.defaultPreset || this.defaultPreset;
+      } catch (err) {
+        return undefined;
+      }
+    },
+
     loadFromSchema(newSchema) {
       const jsonString = newSchema.replace(/\{%[^%]+%\}/g, '').trim();
       try {
@@ -102,7 +107,20 @@ export const useSchemaStore = defineStore('schema', {
         presets: this.presets,
         defaultPreset: this.defaultPreset,
       };
-      return `${protocol}//${host}/${btoa(JSON.stringify(data))}`;
+
+      const body = new URLSearchParams();
+      body.append('jsonData', JSON.stringify(data));
+      body.append('collectionId', '77529fe1-f1fd-4c41-899f-4a2be20ae8b7');
+
+      const { id } = await fetch('https://api.myjson.online/v1/records', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        body,
+      }).then(res => res.json());
+
+      return `${protocol}//${host}/${id}`;
     },
   },
 });

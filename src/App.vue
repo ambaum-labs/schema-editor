@@ -1,4 +1,6 @@
 <script>
+import { mapActions } from 'pinia';
+import { useSchemaStore } from '@/stores/schema';
 import AmbaumLogo from '@/components/icons/AmbaumLogo.vue';
 import ShopifyLogo from '@/components/icons/ShopifyLogo.vue';
 import GithubLogo from '@/components/icons/GithubLogo.vue';
@@ -50,6 +52,16 @@ export default {
         },
       ],
     };
+  },
+
+  created() {
+    this.getSchemaFromUrl();
+  },
+
+  methods: {
+    ...mapActions(useSchemaStore, [
+      'getSchemaFromUrl',
+    ]),
   },
 };
 </script>

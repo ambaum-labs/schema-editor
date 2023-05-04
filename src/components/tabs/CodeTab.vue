@@ -45,9 +45,10 @@ export default {
       'getShareLink',
     ]),
 
-    copyLink() {
+    async copyLink() {
       this.copyingLink = true;
-      navigator.clipboard.writeText(this.getShareLink());
+      const link = await this.getShareLink();
+      navigator.clipboard.writeText(link);
       setTimeout(() => {
         this.copyingLink = false;
       }, 1000);
