@@ -25,7 +25,14 @@ export const useConfigurationStore = defineStore('configurations', {
     },
 
     loadConfiguration(selectedName) {
-      const { general, settings, blocks, locales, presets, default: defaultSettings } = this.getConfiguration(selectedName);
+      const {
+        general,
+        settings,
+        blocks,
+        locales,
+        presets,
+        default: defaultSettings
+      } = JSON.parse(JSON.stringify(this.getConfiguration(selectedName)));
       const schema = useSchemaStore();
       schema.general = general || {};
       schema.settings = settings || [];

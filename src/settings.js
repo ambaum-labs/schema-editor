@@ -186,6 +186,38 @@ export const settingTypes = [
   },
 ];
 
+export const sectionTemplates = [
+  '*',
+  '404',
+  'article',
+  'blog',
+  'captcha',
+  'cart',
+  'collection',
+  'list-collections',
+  'customers/account',
+  'customers/activate_account',
+  'customers/addresses',
+  'customers/login',
+  'customers/order',
+  'customers/register',
+  'customers/reset_password',
+  'gift_card',
+  'index',
+  'page',
+  'password',
+  'policy',
+  'product',
+  'search',
+];
+
+export const sectionGroups = [
+  '*',
+  'header',
+  'footer',
+  'aside',
+];
+
 export function applyHiddenFields(item = {}) {
   hiddenFields.forEach(({ field, defaultValue }) => {
     if (typeof item[field] === 'undefined') {

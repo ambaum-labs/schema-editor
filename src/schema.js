@@ -63,7 +63,21 @@ function stringifyObjects(objects, indent, level) {
   }).join(',\n');
 }
 
-export function generateSchema({ name, tag, sectionClass, limit, maxBlocks, settings, blocks, locales, presets, defaultPreset, codeOptions }) {
+export function generateSchema({
+  name,
+  tag,
+  sectionClass,
+  limit,
+  maxBlocks,
+  settings,
+  blocks,
+  locales,
+  presets,
+  defaultPreset,
+  enabled_on,
+  disabled_on,
+  codeOptions,
+}) {
   let indent = codeOptions.tabSize;
   let level = codeOptions.indentFirstLine ? 1 : 0;
 
@@ -127,6 +141,27 @@ export function generateSchema({ name, tag, sectionClass, limit, maxBlocks, sett
     schema += stringifyObject(defaultPreset, indent, level);
     level--
     schema += indentString('}', indent, level);
+  }
+  if (enabled_on || disabled_on) {
+    const key = enabled_on ? 'enabled_on' : 'disabled_on';
+    const { templates, groups } = enabled_on || disabled_on;
+    if (templates || groups) {
+      schema += ',\n';
+      schema += indentString(`"${key}": {\n`, indent, level);
+      level++;
+      if (templates) {
+        schema += indentString(`"templates": ${JSON.stringify(templates)}`, indent, level);
+      }
+      if (groups) {
+        if (templates) {
+          schema += ',\n';
+        }
+        schema += indentString(`"groups": ${JSON.stringify(groups)}`, indent, level);
+      }
+      schema += '\n';
+      level--;
+      schema += indentString('}', indent, level);
+    }
   }
   schema += '\n';
   level--;
