@@ -62,7 +62,7 @@ export default {
     },
 
     unusedSettings() {
-      return (preset) => this.validSettings.filter(({ id }) => !Object.prototype.hasOwnProperty.call(preset.settings, id));
+      return (preset) => this.validSettings.filter(({ id }) => !Object.prototype.hasOwnProperty.call(preset.settings ?? {}, id));
     },
 
     presetSettings() {

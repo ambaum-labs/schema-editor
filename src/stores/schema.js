@@ -78,7 +78,7 @@ export const useSchemaStore = defineStore('schema', {
           block.settings = block.settings?.map(setting => applyHiddenFields(setting));
         }
         this.locales = Object.assign({}, defaults.locales);
-        Object.entries(locales).forEach(([language, translations]) => {
+        Object.entries(locales || {}).forEach(([language, translations]) => {
           this.locales[language] = applyHiddenFields({ translations: Object.entries(translations).map(([key, value]) => ({ key, value })) });
         });
         this.presets = (presets || defaults.presets).map((preset) => {

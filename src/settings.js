@@ -61,25 +61,25 @@ export const settingTypes = [
   {
     type: 'article',
     requiredFields: ['type', 'id', 'label'],
-    optionalFields: ['default', 'info'],
+    optionalFields: ['info'],
     group: 'specialized',
   },
   {
     type: 'blog',
     requiredFields: ['type', 'id', 'label'],
-    optionalFields: ['default', 'info'],
+    optionalFields: ['info'],
     group: 'specialized',
   },
   {
     type: 'collection',
     requiredFields: ['type', 'id', 'label'],
-    optionalFields: ['default', 'info'],
+    optionalFields: ['info'],
     group: 'specialized',
   },
   {
     type: 'collection_list',
     requiredFields: ['type', 'id', 'label'],
-    optionalFields: ['default', 'info', 'limit'],
+    optionalFields: ['info', 'limit'],
     group: 'specialized',
   },
   {
@@ -121,7 +121,7 @@ export const settingTypes = [
   {
     type: 'image_picker',
     requiredFields: ['type', 'id', 'label'],
-    optionalFields: ['default', 'info'],
+    optionalFields: ['info'],
     group: 'specialized',
   },
   {
@@ -145,19 +145,19 @@ export const settingTypes = [
   {
     type: 'page',
     requiredFields: ['type', 'id', 'label'],
-    optionalFields: ['default', 'info'],
+    optionalFields: ['info'],
     group: 'specialized',
   },
   {
     type: 'product',
     requiredFields: ['type', 'id', 'label'],
-    optionalFields: ['default', 'info'],
+    optionalFields: ['info'],
     group: 'specialized',
   },
   {
     type: 'product_list',
     requiredFields: ['type', 'id', 'label'],
-    optionalFields: ['default', 'info', 'limit'],
+    optionalFields: ['info', 'limit'],
     group: 'specialized',
   },
   {
@@ -175,7 +175,7 @@ export const settingTypes = [
   {
     type: 'video',
     requiredFields: ['type', 'id', 'label'],
-    optionalFields: ['default', 'info'],
+    optionalFields: ['info'],
     group: 'specialized',
   },
   {
