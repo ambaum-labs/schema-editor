@@ -243,8 +243,13 @@ export function updateTypedFields(setting) {
   invalidFields.forEach(property => delete newSetting[property]);
   requiredFields.forEach(property => {
     if (typeof newSetting[property] === 'undefined') {
-      newSetting[property] = '';
+      newSetting[property] = property === 'options' ? [] : '';
     }
   });
+  if (newSetting.options && newSetting.type !== 'select') {
+    newSetting.options.forEach((option) => {
+      delete option.group;
+    });
+  }
   return newSetting;
 }

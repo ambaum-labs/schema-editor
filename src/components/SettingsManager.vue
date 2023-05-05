@@ -1,5 +1,6 @@
 <script>
 import { settingTypes, hiddenFields, createSetting, updateTypedFields } from '@/settings';
+import OptionsInput from '@/components/OptionsInput.vue';
 import ChevronDown from '@/components/icons/ChevronDown.vue';
 import ChevronUp from '@/components/icons/ChevronUp.vue';
 import DocumentDuplicate from '@/components/icons/DocumentDuplicate.vue';
@@ -14,6 +15,7 @@ export default {
   },
 
   components: {
+    OptionsInput,
     ChevronDown,
     ChevronUp,
     DocumentDuplicate,
@@ -116,6 +118,28 @@ export default {
           this.$refs.textareas?.forEach(textarea => this.resizeTextarea(textarea));
         });
       }
+    },
+
+    changeOptionSetting(settingIndex, optionIndex, field, value) {
+      this.settings[settingIndex].options[optionIndex][field] = value;
+    },
+
+    addOption(settingIndex, option) {
+      this.settings[settingIndex].options.push(option);
+    },
+
+    deleteOption(settingIndex, optionIndex) {
+      this.settings[settingIndex].options.splice(optionIndex, 1);
+    },
+
+    toggleOptionGroup(settingIndex, active) {
+      this.settings[settingIndex].options.forEach((option) => {
+        if (active) {
+          option.group = '';
+        } else {
+          delete option.group;
+        }
+      });
     },
 
     addField(index, input) {
@@ -227,6 +251,15 @@ export default {
               </option>
             </optgroup>
           </select>
+          <OptionsInput
+            v-else-if="key === 'options'"
+            :options="value"
+            :hasGroup="setting.type === 'select'"
+            @toggleGroup="(active) => toggleOptionGroup(index, active)"
+            @changeOption="(optionIndex, field, option) => changeOptionSetting(index, optionIndex, field, option)"
+            @add="(option) => addOption(index, option)"
+            @delete="(optionIndex) => deleteOption(index, optionIndex)"
+          />
           <textarea
             v-else
             ref="textareas"
