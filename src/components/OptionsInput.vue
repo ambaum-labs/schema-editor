@@ -51,7 +51,7 @@ export default {
       :key="index"
       class="flex items-center border-t border-slate-700"
     >
-      <div class="min-w-0">
+      <div class="flex-1 min-w-0">
         <div class="flex items-start my-3">
           <label
             :for="`value-${index}`"
